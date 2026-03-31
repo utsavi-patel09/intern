@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import LogoutButton from "@/components/layout/LogoutButton";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export default function Navbar() {
   const { data: session, status } = useSession();
@@ -14,12 +14,26 @@ export default function Navbar() {
   const initial = session?.user?.name?.charAt(0)?.toUpperCase() ?? "?";
   const role = session?.user?.role;
 
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 10);
     };
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    };
+
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, []);
 
   const isActive = (path: string) => pathname === path;
@@ -39,8 +53,8 @@ export default function Navbar() {
     { name: "Manage Users", href: "/admin/users", show: role === "admin" },
     { name: "Manage Interns", href: "/admin/interns", show: role === "admin" },
     { name: "Manage Departments", href: "/admin/departments", show: role === "admin" },
-    { name: "Assign Task", href: "/manager/tasks", show: role === "manager" },
-    { name: "Tasks", href: "/intern/tasks", show: role === "intern" },
+    { name: "Assign Task", href: "/manager/tasks", show: false },
+    { name: "Tasks", href: "/intern/tasks", show: false },
   ];
 
   return (
@@ -77,9 +91,34 @@ export default function Navbar() {
             </Link>
           )}
 
+          {/* Role specific direct links */}
+          {role === "manager" && (
+            <Link
+              href="/manager/tasks"
+              className={`text-sm font-bold transition-colors relative group py-2 ${
+                isActive("/manager/tasks") ? "text-indigo-600" : "text-slate-600 hover:text-indigo-600"
+              }`}
+            >
+              Assign Task
+              <span className={`absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 rounded-full transform origin-left transition-transform duration-300 ${isActive("/manager/tasks") ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"}`}></span>
+            </Link>
+          )}
+
+          {role === "intern" && (
+            <Link
+              href="/intern/tasks"
+              className={`text-sm font-bold transition-colors relative group py-2 ${
+                isActive("/intern/tasks") ? "text-indigo-600" : "text-slate-600 hover:text-indigo-600"
+              }`}
+            >
+              Tasks
+              <span className={`absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 rounded-full transform origin-left transition-transform duration-300 ${isActive("/intern/tasks") ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"}`}></span>
+            </Link>
+          )}
+
           {/* Dropdown */}
           {dropdownLinks.some((link) => link.show) && (
-            <div className="relative">
+            <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setOpen(!open)}
                 className="text-sm font-bold text-slate-600 cursor-pointer hover:text-indigo-600 transition-colors py-2 flex items-center gap-1"
