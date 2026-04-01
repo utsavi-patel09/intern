@@ -106,7 +106,6 @@ export default function AdminDashboard() {
 
               </div>
             </div>
-
             <div className="w-16 h-16 rounded-2xl bg-pink-50 border border-pink-100/50 flex items-center justify-center shadow-sm group-hover:bg-pink-500 group-hover:text-white group-hover:shadow-[0_0_20px_rgba(236,72,153,0.4)] transition-all duration-500 text-pink-500">
               <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path d="M12 14l9-5-9-5-9 5 9 5z" />
@@ -178,8 +177,6 @@ export default function AdminDashboard() {
             </table>
           </div>
         </div>
-
-
 
       </div>
 

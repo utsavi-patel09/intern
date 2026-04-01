@@ -92,29 +92,85 @@ export default function Navbar() {
           )}
 
           {/* Role specific direct links */}
-          {role === "manager" && (
+         {role === "manager" && (
+          <>
             <Link
               href="/manager/tasks"
               className={`text-sm font-bold transition-colors relative group py-2 ${
-                isActive("/manager/tasks") ? "text-indigo-600" : "text-slate-600 hover:text-indigo-600"
+                isActive("/manager/tasks")
+                  ? "text-indigo-600"
+                  : "text-slate-600 hover:text-indigo-600"
               }`}
             >
               Assign Task
-              <span className={`absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 rounded-full transform origin-left transition-transform duration-300 ${isActive("/manager/tasks") ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"}`}></span>
+              <span
+                className={`absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 rounded-full transform origin-left transition-transform duration-300 ${
+                  isActive("/manager/tasks")
+                    ? "scale-x-100"
+                    : "scale-x-0 group-hover:scale-x-100"
+                }`}
+              ></span>
             </Link>
-          )}
 
-          {role === "intern" && (
             <Link
-              href="/intern/tasks"
+              href="/manager/leaves"
               className={`text-sm font-bold transition-colors relative group py-2 ${
-                isActive("/intern/tasks") ? "text-indigo-600" : "text-slate-600 hover:text-indigo-600"
+                isActive("/manager/leaves")
+                  ? "text-indigo-600"
+                  : "text-slate-600 hover:text-indigo-600"
               }`}
             >
-              Tasks
-              <span className={`absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 rounded-full transform origin-left transition-transform duration-300 ${isActive("/intern/tasks") ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"}`}></span>
+              Manage Leaves
+              <span
+                className={`absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 rounded-full transform origin-left transition-transform duration-300 ${
+                  isActive("/manager/leaves")
+                    ? "scale-x-100"
+                    : "scale-x-0 group-hover:scale-x-100"
+                }`}
+              ></span>
             </Link>
-          )}
+          </>
+        )}
+
+          {role === "intern" && (
+              <>
+                <Link
+                  href="/intern/tasks"
+                  className={`text-sm font-bold transition-colors relative group py-2 ${
+                    isActive("/intern/tasks")
+                      ? "text-indigo-600"
+                      : "text-slate-600 hover:text-indigo-600"
+                  }`}
+                >
+                  Tasks
+                  <span
+                    className={`absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 rounded-full transform origin-left transition-transform duration-300 ${
+                      isActive("/intern/tasks")
+                        ? "scale-x-100"
+                        : "scale-x-0 group-hover:scale-x-100"
+                    }`}
+                  ></span>
+                </Link>
+
+                <Link
+                  href="/intern/leaves"
+                  className={`text-sm font-bold transition-colors relative group py-2 ${
+                    isActive("/intern/leaves")
+                      ? "text-indigo-600"
+                      : "text-slate-600 hover:text-indigo-600"
+                  }`}
+                >
+                  Leaves
+                  <span
+                    className={`absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 rounded-full transform origin-left transition-transform duration-300 ${
+                      isActive("/intern/leaves")
+                        ? "scale-x-100"
+                        : "scale-x-0 group-hover:scale-x-100"
+                    }`}
+                  ></span>
+                </Link>
+              </>
+            )}
 
           {/* Dropdown */}
           {dropdownLinks.some((link) => link.show) && (

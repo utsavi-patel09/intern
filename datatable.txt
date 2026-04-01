@@ -1,0 +1,52 @@
+CREATE TABLE leave_requests (
+id SERIAL PRIMARY KEY,
+
+user_id INTEGER,            -- intern applying leave
+manager_id INTEGER,         -- manager reviewing leave
+
+leave_type VARCHAR(50),     -- sick / casual / emergency
+start_date DATE,
+end_date DATE,
+
+reason TEXT,
+
+status VARCHAR(20) DEFAULT 'pending',
+
+applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+reviewed_at TIMESTAMP,
+
+CONSTRAINT fk_leave_user
+FOREIGN KEY (user_id)
+REFERENCES users(id),
+
+CONSTRAINT fk_leave_manager
+FOREIGN KEY (manager_id)
+REFERENCES users(id)
+);
+
+
+
+
+CREATE TABLE leave_balance (
+id SERIAL PRIMARY KEY,
+
+user_id INTEGER UNIQUE,
+
+total_leave INTEGER DEFAULT 20,
+used_leave INTEGER DEFAULT 0,
+remaining_leave INTEGER DEFAULT 20,
+
+updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+CONSTRAINT fk_leave_balance_user
+FOREIGN KEY (user_id)
+REFERENCES users(id)
+);
+
+
+
+ALTER TABLE leave_requests
+ADD CONSTRAINT fk_leave
+FOREIGN KEY (user_id)
+REFERENCES users(id)
+ON DELETE CASCADE;

@@ -77,6 +77,27 @@ const CHECK_EMAIL = gql`
   }
 `;
 
+
+const INSERT_LEAVE_BALANCE = gql`
+  mutation InsertLeaveBalance($object: leave_balance_insert_input!) {
+    insert_leave_balance_one(object: $object) {
+      id
+      user_id
+      total_leave
+      used_leave
+      remaining_leave
+    }
+  }
+`;
+
+const DELETE_LEAVE_BALANCE = gql`
+mutation DeleteLeaveBalance($user_id: Int!) {
+  delete_leave_balance(where: {user_id: {_eq: $user_id}}) {
+    affected_rows
+  }
+}
+`;
+
 // ---------------------- GET Users ----------------------
 export async function GET() {
   try {
@@ -97,13 +118,13 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { college, ...userPayload } = body;
 
-    // Only include department_id if it's not null
     const insertObject: any = { ...userPayload };
+
     if (insertObject.department_id === null || insertObject.department_id === undefined) {
       delete insertObject.department_id;
     }
 
-    // Check if email already exists
+    // Check email
     const { data: emailData } = await client.query<{ users: any[] }>({
       query: CHECK_EMAIL,
       variables: { email: insertObject.email },
@@ -122,15 +143,36 @@ export async function POST(req: Request) {
 
     const createdUser = data?.insert_users_one;
 
-    // Add to interns table if role is intern
+    // If user is intern
     if (createdUser?.role === "intern") {
+
+      // Insert into interns table
       await client.mutate({
         mutation: INSERT_INTERN,
-        variables: { object: { user_id: createdUser.id, college: college || "Not Specified" } },
+        variables: {
+          object: {
+            user_id: createdUser.id,
+            college: college || "Not Specified"
+          }
+        },
+      });
+
+      // Insert into leave_balance table
+      await client.mutate({
+        mutation: INSERT_LEAVE_BALANCE,
+        variables: {
+          object: {
+            user_id: createdUser.id,
+            total_leave: 20,
+            used_leave: 0,
+            remaining_leave: 20
+          }
+        },
       });
     }
 
     return NextResponse.json({ user: createdUser });
+
   } catch (err) {
     console.error("POST /users error:", err);
     return NextResponse.json({ error: "Failed to create user" }, { status: 500 });
@@ -155,10 +197,13 @@ export async function PUT(req: Request) {
         variables: { email },
         fetchPolicy: "no-cache",
       });
+
       const existingUser = emailData?.users?.find((u: any) => u.id !== id);
+
       if (existingUser) {
         return NextResponse.json({ error: "Email already exists" }, { status: 400 });
       }
+
       changes.email = email;
     }
 
@@ -167,7 +212,7 @@ export async function PUT(req: Request) {
       delete changes.department_id;
     }
 
-    // Fetch the existing user to check old role
+    // Get old role
     const { data: userData } = await client.query<{ users_by_pk: any }>({
       query: gql`
         query GetUser($id: Int!) {
@@ -191,9 +236,11 @@ export async function PUT(req: Request) {
 
     const updatedUser = data?.update_users_by_pk;
 
-    // Sync interns table
+    // -------- INTERN + LEAVE BALANCE SYNC --------
+
     if (role === "intern" && oldRole !== "intern") {
-      // Add to interns if not exists
+
+      // Add to interns
       const { data: existingIntern } = await client.query<{ interns: any[] }>({
         query: gql`
           query GetIntern($user_id: Int!) {
@@ -209,18 +256,45 @@ export async function PUT(req: Request) {
       if ((existingIntern?.interns ?? []).length === 0) {
         await client.mutate({
           mutation: INSERT_INTERN,
-          variables: { object: { user_id: updatedUser?.id } },
+          variables: {
+            object: {
+              user_id: updatedUser?.id,
+              college: college || "Not Specified"
+            },
+          },
         });
       }
+
+      // Create leave balance
+      await client.mutate({
+        mutation: INSERT_LEAVE_BALANCE,
+        variables: {
+          object: {
+            user_id: updatedUser?.id,
+            total_leave: 20,
+            used_leave: 0,
+            remaining_leave: 20,
+          },
+        },
+      });
+
     } else if (oldRole === "intern" && role !== "intern") {
-      // Remove from interns if exists
+
+      // Remove intern record
       await client.mutate({
         mutation: DELETE_INTERN,
+        variables: { user_id: updatedUser?.id },
+      });
+
+      // Remove leave balance
+      await client.mutate({
+        mutation: DELETE_LEAVE_BALANCE,
         variables: { user_id: updatedUser?.id },
       });
     }
 
     return NextResponse.json({ user: updatedUser });
+
   } catch (err) {
     console.error("PUT /users error:", err);
     return NextResponse.json({ error: "Failed to update user" }, { status: 500 });
@@ -231,11 +305,49 @@ export async function PUT(req: Request) {
 export async function DELETE(req: Request) {
   try {
     const body = await req.json();
-    const { data } = await client.mutate<{ delete_users_by_pk: any }>({
-      mutation: DELETE_USER,
-      variables: { id: body.id },
+    const { id } = body;
+
+    // 1️⃣ Delete all leave requests for the user
+    
+
+    // 2️⃣ Delete leave balance
+    await client.mutate({
+      mutation: gql`
+        mutation DeleteLeaveBalance($user_id: Int!) {
+          delete_leave_balance(where: { user_id: { _eq: $user_id } }) {
+            affected_rows
+          }
+        }
+      `,
+      variables: { user_id: id },
     });
-    return NextResponse.json({ id: data?.delete_users_by_pk.id });
+
+    // 3️⃣ Delete intern record if exists
+    await client.mutate({
+      mutation: gql`
+        mutation DeleteIntern($user_id: Int!) {
+          delete_interns(where: { user_id: { _eq: $user_id } }) {
+            affected_rows
+          }
+        }
+      `,
+      variables: { user_id: id },
+    });
+
+    // 4️⃣ Delete user
+    const { data } = await client.mutate<{ delete_users_by_pk: any }>({
+      mutation: gql`
+        mutation DeleteUser($id: Int!) {
+          delete_users_by_pk(id: $id) {
+            id
+          }
+        }
+      `,
+      variables: { id },
+    });
+
+    return NextResponse.json({ id: data?.delete_users_by_pk?.id });
+
   } catch (err) {
     console.error("DELETE /users error:", err);
     return NextResponse.json({ error: "Failed to delete user" }, { status: 500 });
