@@ -86,14 +86,7 @@ export default function InternsPage() {
           </h1>
 
         </div>
-        <div className="flex items-center gap-3">
-          <button className="btn-primary flex items-center gap-2 shadow-lg shadow-indigo-500/25 pointer-events-none opacity-50">
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
-            </svg>
-            Add Intern
-          </button>
-        </div>
+       
       </div>
 
       {/* Filters and Table Card */}
