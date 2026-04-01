@@ -42,7 +42,9 @@ export default function ManagerTasks() {
       title: Yup.string().required("Task title is required"),
       description: Yup.string().required("Description is required"),
       internId: Yup.string().required("Please select an intern"),
-      deadline: Yup.string().required("Deadline is required"),
+      deadline: Yup.date()
+        .min(new Date(new Date().setHours(0, 0, 0, 0)), "Deadline cannot be in the past")
+        .required("Deadline is required"),
     }),
     onSubmit: async (values) => {
       if (editingId) {
@@ -337,6 +339,7 @@ export default function ManagerTasks() {
                   <input
                     name="deadline"
                     type="date"
+                    min={new Date().toISOString().split('T')[0]}
                     className={`form-input bg-white/80 focus:bg-white ${formik.touched.deadline && formik.errors.deadline ? 'border-rose-300 ring-rose-100' : ''}`}
                     value={formik.values.deadline}
                     onChange={formik.handleChange}
