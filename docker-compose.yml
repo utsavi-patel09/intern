@@ -44,5 +44,26 @@ services:
       timeout: 10s
       retries: 5
       start_period: 5s
+
+  superset:
+    build:
+      context: .
+      dockerfile: Dockerfile.superset
+    container_name: superset
+    environment:
+      SUPERSET_CONFIG_PATH: /app/pythonpath/superset_config.py
+      SUPERSET_ENV: development
+      SUPERSET_LOAD_EXAMPLES: "no"
+      SUPERSET_SECRET_KEY: "supersecretkey"
+      # Connect Superset to Postgres for metadata
+      SQLALCHEMY_DATABASE_URI: postgresql+psycopg2://postgres:postgrespassword@postgres:5432/postgres
+    volumes:
+      - ./superset_config.py:/app/pythonpath/superset_config.py
+    ports:
+      - "8088:8088"
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
 volumes:
   db_data:

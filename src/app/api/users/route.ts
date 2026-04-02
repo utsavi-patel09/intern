@@ -185,10 +185,7 @@ export async function PUT(req: Request) {
     const body = await req.json();
     const { id, email, password, role, college, ...changes } = body;
 
-    // Hash password if provided
-    if (password) {
-      changes.password = await bcrypt.hash(password, 10);
-    }
+   
 
     // Check email if updated
     if (email) {

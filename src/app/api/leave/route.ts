@@ -6,12 +6,14 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 interface LeaveRequest {
   id: number;
-  user_id: number;
   leave_type: string;
   start_date: string;
   end_date: string;
   reason: string;
   status: string;
+  users_by_user_id: {
+    name: string;
+  };
 }
 
 interface LeaveResponse {
@@ -25,12 +27,14 @@ query GetLeaves($user_id:Int!) {
     order_by:{applied_at:desc}
   ){
     id
-    user_id
     leave_type
     start_date
     end_date
     reason
     status
+    users_by_user_id {
+      name
+    }
   }
 }
 `;

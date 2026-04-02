@@ -50,6 +50,7 @@ export default function Navbar() {
   };
 
   const dropdownLinks = [
+    { name: "Analytics", href: "/admin/dashboard", show: role === "admin" },
     { name: "Manage Users", href: "/admin/users", show: role === "admin" },
     { name: "Manage Interns", href: "/admin/interns", show: role === "admin" },
     { name: "Manage Departments", href: "/admin/departments", show: role === "admin" },

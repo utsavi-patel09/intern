@@ -85,21 +85,29 @@ export function UserFormModal({
               )}
             </div>
 
-            <div className="flex flex-col gap-1.5">
-              <label className="form-label">Password</label>
-              <input
-                name="password"
-                type="password"
-                placeholder={editingUserId ? "Leave blank to keep" : "Secure password"}
-                value={formik.values.password}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                className={`form-input bg-white/80 focus:bg-white ${formik.touched.password && formik.errors.password ? 'border-rose-300 ring-rose-100' : ''}`}
-              />
-              {formik.touched.password && formik.errors.password && (
-                <p className="text-rose-500 text-xs font-bold mt-1">{formik.errors.password}</p>
-              )}
-            </div>
+            {!editingUserId && (
+              <div className="flex flex-col gap-1.5">
+                <label className="form-label">Password</label>
+                <input
+                  name="password"
+                  type="password"
+                  placeholder="Secure password"
+                  value={formik.values.password}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  className={`form-input bg-white/80 focus:bg-white ${
+                    formik.touched.password && formik.errors.password
+                      ? 'border-rose-300 ring-rose-100'
+                      : ''
+                  }`}
+                />
+                {formik.touched.password && formik.errors.password && (
+                  <p className="text-rose-500 text-xs font-bold mt-1">
+                    {formik.errors.password}
+                  </p>
+                )}
+              </div>
+            )}
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div className="flex flex-col gap-1.5">
