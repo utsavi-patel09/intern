@@ -67,13 +67,13 @@ export default function Navbar() {
       }`}>
         {/* Brand */}
         <Link href="/" className="flex items-center gap-3 no-underline group">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-pink-500 flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-105 group-hover:shadow-[0_0_20px_rgba(79,70,229,0.3)]">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-600 to-green-400 flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-105 group-hover:shadow-[0_0_20px_rgba(22,163,74,0.3)]">
             <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
           </div>
           <span className="text-slate-900 text-xl font-extrabold tracking-tight font-heading">
-            Intern<span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-pink-500">Hub</span>
+            Intern<span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-green-400">Hub</span>
           </span>
         </Link>
 
@@ -84,11 +84,11 @@ export default function Navbar() {
             <Link
               href={dashboardLink.href}
               className={`text-sm font-bold transition-colors relative group py-2 ${
-                isActive(dashboardLink.href) ? "text-indigo-600" : "text-slate-600 hover:text-indigo-600"
+                isActive(dashboardLink.href) ? "text-green-600" : "text-slate-600 hover:text-green-600"
               }`}
             >
               {dashboardLink.name}
-              <span className={`absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 rounded-full transform origin-left transition-transform duration-300 ${isActive(dashboardLink.href) ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"}`}></span>
+              <span className={`absolute bottom-0 left-0 w-full h-0.5 bg-green-600 rounded-full transform origin-left transition-transform duration-300 ${isActive(dashboardLink.href) ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"}`}></span>
             </Link>
           )}
 
@@ -99,13 +99,13 @@ export default function Navbar() {
               href="/manager/tasks"
               className={`text-sm font-bold transition-colors relative group py-2 ${
                 isActive("/manager/tasks")
-                  ? "text-indigo-600"
-                  : "text-slate-600 hover:text-indigo-600"
+                  ? "text-green-600"
+                  : "text-slate-600 hover:text-green-600"
               }`}
             >
               Assign Task
               <span
-                className={`absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 rounded-full transform origin-left transition-transform duration-300 ${
+                className={`absolute bottom-0 left-0 w-full h-0.5 bg-green-600 rounded-full transform origin-left transition-transform duration-300 ${
                   isActive("/manager/tasks")
                     ? "scale-x-100"
                     : "scale-x-0 group-hover:scale-x-100"
@@ -117,13 +117,13 @@ export default function Navbar() {
               href="/manager/leaves"
               className={`text-sm font-bold transition-colors relative group py-2 ${
                 isActive("/manager/leaves")
-                  ? "text-indigo-600"
-                  : "text-slate-600 hover:text-indigo-600"
+                  ? "text-green-600"
+                  : "text-slate-600 hover:text-green-600"
               }`}
             >
               Manage Leaves
               <span
-                className={`absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 rounded-full transform origin-left transition-transform duration-300 ${
+                className={`absolute bottom-0 left-0 w-full h-0.5 bg-green-600 rounded-full transform origin-left transition-transform duration-300 ${
                   isActive("/manager/leaves")
                     ? "scale-x-100"
                     : "scale-x-0 group-hover:scale-x-100"
@@ -139,13 +139,13 @@ export default function Navbar() {
                   href="/intern/tasks"
                   className={`text-sm font-bold transition-colors relative group py-2 ${
                     isActive("/intern/tasks")
-                      ? "text-indigo-600"
-                      : "text-slate-600 hover:text-indigo-600"
+                      ? "text-green-600"
+                      : "text-slate-600 hover:text-green-600"
                   }`}
                 >
                   Tasks
                   <span
-                    className={`absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 rounded-full transform origin-left transition-transform duration-300 ${
+                    className={`absolute bottom-0 left-0 w-full h-0.5 bg-green-600 rounded-full transform origin-left transition-transform duration-300 ${
                       isActive("/intern/tasks")
                         ? "scale-x-100"
                         : "scale-x-0 group-hover:scale-x-100"
@@ -157,13 +157,13 @@ export default function Navbar() {
                   href="/intern/leaves"
                   className={`text-sm font-bold transition-colors relative group py-2 ${
                     isActive("/intern/leaves")
-                      ? "text-indigo-600"
-                      : "text-slate-600 hover:text-indigo-600"
+                      ? "text-green-600"
+                      : "text-slate-600 hover:text-green-600"
                   }`}
                 >
                   Leaves
                   <span
-                    className={`absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 rounded-full transform origin-left transition-transform duration-300 ${
+                    className={`absolute bottom-0 left-0 w-full h-0.5 bg-green-600 rounded-full transform origin-left transition-transform duration-300 ${
                       isActive("/intern/leaves")
                         ? "scale-x-100"
                         : "scale-x-0 group-hover:scale-x-100"
@@ -178,7 +178,7 @@ export default function Navbar() {
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setOpen(!open)}
-                className="text-sm font-bold text-slate-600 cursor-pointer hover:text-indigo-600 transition-colors py-2 flex items-center gap-1"
+                className="text-sm font-bold text-slate-600 cursor-pointer hover:text-green-600 transition-colors py-2 flex items-center gap-1"
               >
                 Manage
                 <svg className={`w-4 h-4 transition-transform ${open ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -194,7 +194,7 @@ export default function Navbar() {
                       <Link
                         key={link.href}
                         href={link.href}
-                        className="block px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-indigo-600 transition-colors"
+                        className="block px-4 py-2 text-sm font-medium text-slate-600 hover:bg-green-50 hover:text-green-600 transition-colors"
                         onClick={() => setOpen(false)}
                       >
                         {link.name}
@@ -209,8 +209,8 @@ export default function Navbar() {
             <div className="flex items-center gap-5">
               <LogoutButton />
               <div className="flex items-center gap-3 pl-5 border-l border-slate-200/50">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-100 to-pink-100 flex items-center justify-center shrink-0 border border-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.05)]">
-                  <span className="text-indigo-600 text-sm font-black">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-100 to-green-200 flex items-center justify-center shrink-0 border border-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.05)]">
+                  <span className="text-green-700 text-sm font-black">
                     {initial}
                   </span>
                 </div>
@@ -218,7 +218,7 @@ export default function Navbar() {
                   <p className="text-slate-900 text-sm font-bold leading-none">
                     {session.user.name}
                   </p>
-                  <p className="text-indigo-500 text-[10px] font-black uppercase tracking-wider mt-1">
+                  <p className="text-green-600 text-[10px] font-black uppercase tracking-wider mt-1">
                     {role}
                   </p>
                 </div>
@@ -229,7 +229,7 @@ export default function Navbar() {
               {pathname !== "/" && (
                 <Link
                   href="/"
-                  className="text-sm font-bold text-slate-600 hover:text-indigo-600 transition-colors px-4 py-2 rounded-xl hover:bg-slate-50 border border-transparent hover:border-slate-100"
+                  className="text-sm font-bold text-slate-600 hover:text-green-600 transition-colors px-4 py-2 rounded-xl hover:bg-green-50 border border-transparent hover:border-green-100"
                 >
                   Home
                 </Link>

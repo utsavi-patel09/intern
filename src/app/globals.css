@@ -3,19 +3,19 @@
 
 /* ── Premium Design Tokens ── */
 :root {
-  /* Core Colors */
-  --color-primary: #4F46E5;
-  /* Indigo 600 */
-  --color-primary-dark: #3730A3;
-  /* Indigo 800 */
-  --color-primary-light: #EEF2FF;
-  /* Indigo 50 */
-  --color-accent: #EC4899;
-  /* Pink 500 */
+  /* Core Colors — White & Green Theme */
+  --color-primary: #16A34A;
+  /* Green 600 */
+  --color-primary-dark: #14532D;
+  /* Green 900 */
+  --color-primary-light: #F0FDF4;
+  /* Green 50 */
+  --color-accent: #22C55E;
+  /* Green 500 */
 
   /* Surfaces & Backgrounds */
   --color-app-bg: #F8FAFC;
-  /* Slate 50 */
+  /* Slate 50 — clean white-ish canvas */
   --color-surface: rgba(255, 255, 255, 0.7);
   /* Glass surface */
   --color-surface-solid: #FFFFFF;
@@ -33,7 +33,7 @@
   --color-border: rgba(226, 232, 240, 0.6);
   /* Slate 200 with opacity */
   --color-border-solid: #E2E8F0;
-  --color-success: #10B981;
+  --color-success: #16A34A;
   --color-danger: #F43F5E;
   --color-warning: #F59E0B;
 
@@ -99,14 +99,14 @@
     @apply relative inline-flex items-center justify-center px-5 py-2.5 rounded-xl font-medium text-white transition-all duration-300;
     background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
     background-size: 200% auto;
-    box-shadow: 0 4px 14px 0 rgba(79, 70, 229, 0.39);
+    box-shadow: 0 4px 14px 0 rgba(22, 163, 74, 0.35);
     border: none;
     cursor: pointer;
     overflow: hidden;
   }
 
   .btn-primary:hover:not(:disabled) {
-    box-shadow: 0 6px 20px rgba(79, 70, 229, 0.23);
+    box-shadow: 0 6px 20px rgba(22, 163, 74, 0.25);
     transform: translateY(-1px);
     background-position: right center;
   }
@@ -170,7 +170,7 @@
     outline: none;
     border-color: var(--color-primary);
     background: var(--color-surface-solid);
-    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1), inset 0 2px 4px 0 rgba(0, 0, 0, 0.02);
+    box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.12), inset 0 2px 4px 0 rgba(0, 0, 0, 0.02);
   }
 
   .form-label {
@@ -194,7 +194,7 @@
     outline: none;
     border-color: var(--color-primary);
     background-color: var(--color-surface-solid);
-    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1), inset 0 2px 4px 0 rgba(0, 0, 0, 0.02);
+    box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.12), inset 0 2px 4px 0 rgba(0, 0, 0, 0.02);
   }
 
   /* ── Cards & Glassmorphism ── */
@@ -236,7 +236,7 @@
 
   /* ── Typography Utilities ── */
   .text-gradient {
-    background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+    background: linear-gradient(135deg, var(--color-primary-dark), var(--color-accent));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
