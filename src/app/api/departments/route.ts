@@ -47,6 +47,12 @@ export interface Department {
   name: string;
 }
 
+type DeleteDepartmentResponse = {
+  delete_departments_by_pk: {
+    id: number;
+  } | null;
+};
+
 // ------------------- API Handlers -------------------
 
 // GET Departments
@@ -108,19 +114,32 @@ export async function PUT(req: Request) {
 
 // DELETE Department
 export async function DELETE(req: Request) {
-  // ── Auth: admin only ──
   const { errorResponse } = await requireAuth(["admin"]);
   if (errorResponse) return errorResponse;
 
   try {
-    const body: { id: number } = await req.json();
-    const { data } = await client.mutate<{ delete_departments_by_pk: { id: number } }>({
-      mutation: DELETE_DEPARTMENT,
-      variables: { id: body.id },
-    });
-    return NextResponse.json({ id: data?.delete_departments_by_pk.id });
+    const { id }: { id: number } = await req.json();
+
+    if (!id) {
+      return NextResponse.json({ error: "Department id required" }, { status: 400 });
+    }
+
+    const { data } = await client.mutate<DeleteDepartmentResponse>({
+  mutation: DELETE_DEPARTMENT,
+  variables: { id: id },
+});
+
+    if (!data?.delete_departments_by_pk) {
+      return NextResponse.json({ error: "Department not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({ id });
+
   } catch (err) {
     console.error("DELETE /departments error:", err);
-    return NextResponse.json({ error: "Failed to delete department" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to delete department" },
+      { status: 500 }
+    );
   }
 }

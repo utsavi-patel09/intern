@@ -28,10 +28,16 @@ export function useUserForm({ onSuccess, departments }: UseUserFormProps) {
     validationSchema: Yup.object().shape({
       name: Yup.string().min(3, "Name must be at least 3 characters").required("Required"),
       email: Yup.string().email("Invalid email format").required("Required"),
-      password: Yup.string().test("password-required", "Required", (value) => {
-        if (!editingUserId && !value) return false;
-        return true;
-      }).min(6, "Password must be at least 6 characters").nullable(),
+      password: Yup.string()
+        .test("password-required", "Password is required", (value) => {
+          if (!editingUserId && !value) return false;
+          return true;
+        })
+        .min(6, "Password must be at least 6 characters")
+        .matches(/[a-z]/, "Must contain at least one lowercase letter")
+        .matches(/[A-Z]/, "Must contain at least one uppercase letter")
+        .matches(/[0-9]/, "Must contain at least one number")
+        .matches(/[@$!%*?&]/, "Must contain at least one special character"),
       role: Yup.string().required("Required"),
       department_id: Yup.number().nullable(),
       college: Yup.string().when("role", {
