@@ -32,7 +32,7 @@ export default function Hero() {
             </button>
           </Link>
         ) : (
-          <Link href="/dashboard" className="w-full sm:w-auto">
+          <Link href="/admin" className="w-full sm:w-auto">
             <button className="w-full sm:w-auto bg-[#1E3A5F] text-white border border-transparent px-10 py-5 text-lg font-bold rounded-2xl hover:bg-[#0F2137] hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-3">
               Go to Dashboard
               <svg className="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
