@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import client from "@/lib/apolloClient";
 import { gql } from "@apollo/client";
+import { requireAuth } from "@/lib/auth";
 
 /* 1️⃣ Update leave_requests status */
 const UPDATE_STATUS = gql`
@@ -41,6 +42,10 @@ interface UpdateStatusResponse {
 }
 
 export async function POST(req: Request) {
+  // ── Auth: manager only ──
+  const { errorResponse } = await requireAuth(["manager"]);
+  if (errorResponse) return errorResponse;
+
   try {
     const { id, status } = await req.json();
 

@@ -41,7 +41,7 @@ export default function AdminUsers() {
   if (loading) {
     return (
       <div className="flex flex-col justify-center items-center min-h-[70vh]">
-        <div className="w-12 h-12 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin mb-4"></div>
+        <div className="w-12 h-12 border-4 border-sky-100 border-t-[#1E3A5F] rounded-full animate-spin mb-4"></div>
         <div className="text-slate-500 font-medium font-heading tracking-wide">Loading users...</div>
       </div>
     );
@@ -61,7 +61,7 @@ export default function AdminUsers() {
               startCreating(activeRole);
               setShowAddForm(true);
             }}
-            className="btn-primary flex items-center gap-2 shadow-lg shadow-indigo-500/25 transition-all hover:scale-105"
+            className="btn-primary flex items-center gap-2 shadow-lg shadow-[#1E3A5F]/20 transition-all hover:scale-105"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
@@ -84,7 +84,7 @@ export default function AdminUsers() {
       />
 
       {/* Users Table Container */}
-      <div className="table-container shadow-[0_8px_30px_rgb(0,0,0,0.04)] bg-white/60 mb-10">
+      <div className="table-container shadow-[0_8px_30px_rgb(0,0,0,0.04)] bg-white/70 mb-10">
         <UserFilters
           search={search}
           setSearch={setSearch}

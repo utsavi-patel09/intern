@@ -12,7 +12,7 @@ export function PasswordModal({ show, onClose, formik, loading }: PasswordModalP
     <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-50 animate-in fade-in duration-200">
       <div className="bg-white p-8 rounded-[24px] shadow-2xl w-[90%] max-w-md animate-in zoom-in-95 duration-300">
         <h2 className="text-2xl font-bold font-heading text-slate-900 mb-6 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-rose-50 flex items-center justify-center text-rose-500">
+          <div className="w-10 h-10 rounded-xl bg-sky-50 flex items-center justify-center text-[#1E3A5F]">
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
           </div>
           Change Password
@@ -27,10 +27,10 @@ export function PasswordModal({ show, onClose, formik, loading }: PasswordModalP
               value={formik.values.current_password}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              className={`form-input bg-slate-50 focus:bg-white ${formik.touched.current_password && formik.errors.current_password ? 'border-rose-300 ring-rose-100' : ''}`}
+              className={`form-input bg-slate-50 focus:bg-white ${formik.touched.current_password && formik.errors.current_password ? 'border-red-300 ring-red-100' : ''}`}
             />
             {formik.touched.current_password && formik.errors.current_password && (
-              <p className="text-rose-500 text-xs font-bold mt-1">{formik.errors.current_password}</p>
+              <p className="text-red-500 text-xs font-bold mt-1">{formik.errors.current_password}</p>
             )}
           </div>
           <div>
@@ -42,10 +42,10 @@ export function PasswordModal({ show, onClose, formik, loading }: PasswordModalP
               value={formik.values.new_password}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              className={`form-input bg-slate-50 focus:bg-white ${formik.touched.new_password && formik.errors.new_password ? 'border-rose-300 ring-rose-100' : ''}`}
+              className={`form-input bg-slate-50 focus:bg-white ${formik.touched.new_password && formik.errors.new_password ? 'border-red-300 ring-red-100' : ''}`}
             />
             {formik.touched.new_password && formik.errors.new_password && (
-              <p className="text-rose-500 text-xs font-bold mt-1">{formik.errors.new_password}</p>
+              <p className="text-red-500 text-xs font-bold mt-1">{formik.errors.new_password}</p>
             )}
           </div>
 

@@ -69,7 +69,7 @@ export default function InternsPage() {
   if (loading) {
     return (
       <div className="flex flex-col justify-center items-center min-h-[70vh]">
-        <div className="w-12 h-12 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin mb-4"></div>
+        <div className="w-12 h-12 border-4 border-sky-100 border-t-[#1E3A5F] rounded-full animate-spin mb-4"></div>
         <div className="text-slate-500 font-medium font-heading tracking-wide">Loading interns...</div>
       </div>
     );
@@ -90,20 +90,20 @@ export default function InternsPage() {
       </div>
 
       {/* Filters and Table Card */}
-      <div className="table-container shadow-[0_8px_30px_rgb(0,0,0,0.04)] bg-white/60 mb-8">
+      <div className="table-container shadow-[0_8px_30px_rgb(0,0,0,0.04)] bg-white/70 mb-8">
 
         {/* Filters Bar */}
-        <div className="p-5 border-b border-slate-200/60 flex flex-col xl:flex-row gap-4 justify-between items-center bg-white/40 backdrop-blur-md">
+        <div className="p-5 border-b border-slate-200/60 flex flex-col xl:flex-row gap-4 justify-between items-center bg-white/50 backdrop-blur-md">
           <div className="flex flex-col sm:flex-row gap-4 w-full xl:w-auto">
             {/* College Filter */}
             <div className="relative min-w-[200px] w-full sm:w-auto">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-indigo-500">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#1E3A5F]">
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
               </div>
               <select
                 value={filterCollege}
                 onChange={(e) => setFilterCollege(e.target.value)}
-                className="form-select pl-9 py-2.5 text-sm bg-white/60 hover:bg-white transition-colors border-slate-200 w-full font-medium text-slate-700"
+                className="form-select pl-9 py-2.5 text-sm bg-white/70 hover:bg-white transition-colors border-slate-200 w-full font-medium text-slate-700"
               >
                 <option value="">All Colleges</option>
                 {colleges.map((c) => (
@@ -114,13 +114,13 @@ export default function InternsPage() {
 
             {/* Department Filter */}
             <div className="relative min-w-[200px] w-full sm:w-auto">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-pink-500">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-sky-500">
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
               </div>
               <select
                 value={filterDepartment}
                 onChange={(e) => setFilterDepartment(e.target.value ? Number(e.target.value) : "")}
-                className="form-select pl-9 py-2.5 text-sm bg-white/60 hover:bg-white transition-colors border-slate-200 w-full font-medium text-slate-700"
+                className="form-select pl-9 py-2.5 text-sm bg-white/70 hover:bg-white transition-colors border-slate-200 w-full font-medium text-slate-700"
               >
                 <option value="">All Departments</option>
                 {departments.map((d) => (
@@ -140,7 +140,7 @@ export default function InternsPage() {
               placeholder="Search interns by name..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="form-input pl-9 py-2.5 text-sm bg-white/60 hover:bg-white transition-colors border-slate-200 font-medium text-slate-700 placeholder:font-normal placeholder:text-slate-400"
+              className="form-input pl-9 py-2.5 text-sm bg-white/70 hover:bg-white transition-colors border-slate-200 font-medium text-slate-700 placeholder:font-normal placeholder:text-slate-400"
             />
           </div>
         </div>
@@ -172,13 +172,13 @@ export default function InternsPage() {
                 </tr>
               ) : (
                 filteredData.map((item: InternWithUser) => (
-                  <tr key={item.id} className="table-row group bg-white/40 hover:bg-white/80 transition-colors">
+                  <tr key={item.id} className="table-row group bg-white/50 hover:bg-white/85 transition-colors">
                     <td className="table-td py-4">
                       <div className="flex items-center gap-3.5">
-                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-50 to-indigo-100/50 flex items-center justify-center text-indigo-600 group-hover:scale-110 group-hover:shadow-sm transition-all duration-300">
+                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-50 to-sky-100/50 flex items-center justify-center text-[#1E3A5F] group-hover:scale-110 group-hover:shadow-sm transition-all duration-300">
                           <span className="font-black text-sm">{item.name.charAt(0).toUpperCase()}</span>
                         </div>
-                        <span className="font-bold text-slate-800 text-base group-hover:text-indigo-700 transition-colors">{item.name}</span>
+                        <span className="font-bold text-slate-800 text-base group-hover:text-[#1E3A5F] transition-colors">{item.name}</span>
                       </div>
                     </td>
                     <td className="table-td py-4">
@@ -194,12 +194,12 @@ export default function InternsPage() {
                       </div>
                     </td>
                     <td className="table-td py-4">
-                      <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-sm font-bold bg-white border border-slate-200 text-slate-700 shadow-sm group-hover:bg-indigo-50 group-hover:border-indigo-100 group-hover:text-indigo-700 transition-all duration-300">
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-sm font-bold bg-white border border-slate-200 text-slate-700 shadow-sm group-hover:bg-sky-50 group-hover:border-sky-100 group-hover:text-[#1E3A5F] transition-all duration-300">
                         {item.college}
                       </span>
                     </td>
                     <td className="table-td py-4">
-                      <span className="inline-flex items-center px-2.5 py-1 rounded-full text-sm font-bold bg-pink-50 text-pink-700 border border-pink-100 shadow-sm group-hover:bg-pink-100 group-hover:text-pink-800 transition-all duration-300">
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-full text-sm font-bold bg-sky-50 text-[#1E3A5F] border border-sky-100 shadow-sm group-hover:bg-sky-100 transition-all duration-300">
                         {getDeptName(item.department_id)}
                       </span>
                     </td>

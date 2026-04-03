@@ -139,7 +139,7 @@ export default function ManagerTasks() {
   if (loading) {
     return (
       <div className="flex flex-col justify-center items-center min-h-[70vh]">
-        <div className="w-12 h-12 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin mb-4"></div>
+        <div className="w-12 h-12 border-4 border-sky-100 border-t-[#1E3A5F] rounded-full animate-spin mb-4"></div>
         <div className="text-slate-500 font-medium font-heading tracking-wide">Loading tasks...</div>
       </div>
     );
@@ -159,7 +159,7 @@ export default function ManagerTasks() {
         <div className="flex items-center gap-3">
           <button
             onClick={openNewTaskModal}
-            className="btn-primary flex items-center gap-2 shadow-lg shadow-indigo-500/25"
+            className="btn-primary flex items-center gap-2 shadow-lg shadow-[#1E3A5F]/20"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
@@ -170,11 +170,11 @@ export default function ManagerTasks() {
       </div>
 
       {/* Task Table Card */}
-      <div className="table-container shadow-[0_8px_30px_rgb(0,0,0,0.04)] bg-white/60 mb-10">
-        <div className="px-6 py-5 border-b border-slate-200/60 flex justify-between items-center bg-white/40 backdrop-blur-md">
+      <div className="table-container shadow-[0_8px_30px_rgb(0,0,0,0.04)] bg-white/70 mb-10">
+        <div className="px-6 py-5 border-b border-slate-200/60 flex justify-between items-center bg-white/50 backdrop-blur-md">
           <h2 className="section-title flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-indigo-100/50 flex items-center justify-center text-indigo-500">
-              <svg className="w-5 h-5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="w-8 h-8 rounded-lg bg-sky-50 flex items-center justify-center text-[#1E3A5F]">
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
               </svg>
             </div>
@@ -203,7 +203,7 @@ export default function ManagerTasks() {
                         <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>
                       </div>
                       <p className="font-semibold text-slate-600">No tasks found</p>
-                      <p className="text-sm">Click 'Add Task' to assign a new task to an intern.</p>
+                      <p className="text-sm">Click &apos;Add Task&apos; to assign a new task to an intern.</p>
                       <button onClick={openNewTaskModal} className="btn-secondary btn-sm mt-2">Create Task</button>
                     </div>
                   </td>
@@ -212,7 +212,7 @@ export default function ManagerTasks() {
                 tasks.map((task) => {
                   const intern = interns.find(i => i.id === task.assigned_to);
                   return (
-                    <tr key={task.id} className="table-row group bg-white/40 hover:bg-white/80 transition-colors">
+                    <tr key={task.id} className="table-row group bg-white/50 hover:bg-white/85 transition-colors">
                       <td className="table-td py-4">
                         <span className="font-bold text-slate-800">{task.title}</span>
                       </td>
@@ -221,7 +221,7 @@ export default function ManagerTasks() {
                       </td>
                       <td className="table-td py-4">
                         <div className="flex items-center gap-2">
-                          <div className="w-7 h-7 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 text-xs font-bold">
+                          <div className="w-7 h-7 rounded-full bg-sky-100 flex items-center justify-center text-[#1E3A5F] text-xs font-bold">
                             {(intern?.name?.charAt(0) || "?").toUpperCase()}
                           </div>
                           <span className="font-medium">{intern?.name || "Unknown"}</span>
@@ -242,14 +242,14 @@ export default function ManagerTasks() {
                         <div className="flex items-center justify-end gap-2">
                           <button
                             onClick={() => editTask(task)}
-                            className="p-1.5 rounded-lg text-indigo-500 hover:bg-indigo-50 hover:text-indigo-700 transition-colors"
+                            className="p-1.5 rounded-lg text-sky-600 hover:bg-sky-50 hover:text-[#1E3A5F] transition-colors"
                             title="Edit"
                           >
                             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
                           </button>
                           <button
                             onClick={() => deleteTask(task.id)}
-                            className="p-1.5 rounded-lg text-rose-500 hover:bg-rose-50 hover:text-rose-700 transition-colors"
+                            className="p-1.5 rounded-lg text-red-500 hover:bg-red-50 hover:text-red-700 transition-colors"
                             title="Delete"
                           >
                             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
@@ -270,8 +270,8 @@ export default function ManagerTasks() {
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-0">
           <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity" onClick={closeModal}></div>
 
-          <div className="relative bg-white/90 backdrop-blur-xl rounded-[2rem] shadow-2xl w-full max-w-lg overflow-hidden border border-white animate-in zoom-in-95 duration-200">
-            <div className="px-8 py-6 border-b border-slate-100 flex justify-between items-center bg-white/50">
+          <div className="relative bg-white/95 backdrop-blur-xl rounded-[2rem] shadow-2xl w-full max-w-lg overflow-hidden border border-slate-200/60 animate-in zoom-in-95 duration-200">
+            <div className="px-8 py-6 border-b border-slate-100 flex justify-between items-center bg-white/60">
               <h3 className="text-xl font-bold font-heading text-slate-900">
                 {editingId ? "Update Task Details" : "Assign New Task"}
               </h3>
@@ -285,14 +285,14 @@ export default function ManagerTasks() {
                 <label className="form-label">Task Title</label>
                 <input
                   name="title"
-                  className={`form-input bg-white/80 focus:bg-white ${formik.touched.title && formik.errors.title ? 'border-rose-300 ring-rose-100' : ''}`}
+                  className={`form-input bg-white/80 focus:bg-white ${formik.touched.title && formik.errors.title ? 'border-red-300 ring-red-100' : ''}`}
                   placeholder="E.g., Design new landing page"
                   value={formik.values.title}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                 />
                 {formik.touched.title && formik.errors.title && (
-                  <p className="text-rose-500 text-xs font-bold mt-1">{formik.errors.title}</p>
+                  <p className="text-red-500 text-xs font-bold mt-1">{formik.errors.title}</p>
                 )}
               </div>
 
@@ -300,14 +300,14 @@ export default function ManagerTasks() {
                 <label className="form-label">Description</label>
                 <textarea
                   name="description"
-                  className={`form-input bg-white/80 focus:bg-white min-h-[100px] resize-y ${formik.touched.description && formik.errors.description ? 'border-rose-300 ring-rose-100' : ''}`}
+                  className={`form-input bg-white/80 focus:bg-white min-h-[100px] resize-y ${formik.touched.description && formik.errors.description ? 'border-red-300 ring-red-100' : ''}`}
                   placeholder="Provide detailed instruction..."
                   value={formik.values.description}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                 />
                 {formik.touched.description && formik.errors.description && (
-                  <p className="text-rose-500 text-xs font-bold mt-1">{formik.errors.description}</p>
+                  <p className="text-red-500 text-xs font-bold mt-1">{formik.errors.description}</p>
                 )}
               </div>
 
@@ -316,7 +316,7 @@ export default function ManagerTasks() {
                   <label className="form-label">Assign To</label>
                   <select
                     name="internId"
-                    className={`form-select bg-white/80 focus:bg-white ${formik.touched.internId && formik.errors.internId ? 'border-rose-300 ring-rose-100' : ''}`}
+                    className={`form-select bg-white/80 focus:bg-white ${formik.touched.internId && formik.errors.internId ? 'border-red-300 ring-red-100' : ''}`}
                     value={formik.values.internId}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
@@ -330,7 +330,7 @@ export default function ManagerTasks() {
                     ))}
                   </select>
                   {formik.touched.internId && formik.errors.internId && (
-                    <p className="text-rose-500 text-xs font-bold mt-1">{formik.errors.internId}</p>
+                    <p className="text-red-500 text-xs font-bold mt-1">{formik.errors.internId}</p>
                   )}
                 </div>
 
@@ -340,13 +340,13 @@ export default function ManagerTasks() {
                     name="deadline"
                     type="date"
                     min={new Date().toISOString().split('T')[0]}
-                    className={`form-input bg-white/80 focus:bg-white ${formik.touched.deadline && formik.errors.deadline ? 'border-rose-300 ring-rose-100' : ''}`}
+                    className={`form-input bg-white/80 focus:bg-white ${formik.touched.deadline && formik.errors.deadline ? 'border-red-300 ring-red-100' : ''}`}
                     value={formik.values.deadline}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                   />
                   {formik.touched.deadline && formik.errors.deadline && (
-                    <p className="text-rose-500 text-xs font-bold mt-1">{formik.errors.deadline}</p>
+                    <p className="text-red-500 text-xs font-bold mt-1">{formik.errors.deadline}</p>
                   )}
                 </div>
               </div>
@@ -359,7 +359,7 @@ export default function ManagerTasks() {
               <button 
                 type="submit" 
                 onClick={() => formik.handleSubmit()} 
-                className={`btn-primary px-6 shadow-lg shadow-indigo-500/25 ${formik.isSubmitting ? 'opacity-70 pointer-events-none' : ''}`}
+                className={`btn-primary px-6 shadow-lg shadow-[#1E3A5F]/20 ${formik.isSubmitting ? 'opacity-70 pointer-events-none' : ''}`}
               >
                 {editingId ? "Update Task" : "Assign Task"}
               </button>

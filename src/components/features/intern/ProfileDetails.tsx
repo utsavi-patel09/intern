@@ -10,14 +10,14 @@ interface ProfileDetailsProps {
 
 export function ProfileDetails({ intern, editing, setEditing, formik, loading }: ProfileDetailsProps) {
   return (
-    <div className="md:col-span-2 card-glass bg-white/50 flex flex-col shadow-sm">
-      <div className="px-8 py-5 border-b border-slate-200/50 flex justify-between items-center bg-white/30 backdrop-blur-sm rounded-t-[24px]">
+    <div className="md:col-span-2 card-glass bg-white/60 flex flex-col shadow-sm">
+      <div className="px-8 py-5 border-b border-slate-200/50 flex justify-between items-center bg-white/40 backdrop-blur-sm rounded-t-[24px]">
         <h2 className="section-title text-lg flex items-center gap-2">
-          <svg className="w-5 h-5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+          <svg className="w-5 h-5 text-[#1E3A5F]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
           Personal Details
         </h2>
         {!editing ? (
-          <button onClick={() => setEditing(true)} className="btn-secondary py-1.5 px-3 text-sm flex items-center gap-1.5 focus:ring-2 focus:ring-indigo-500/20">
+          <button onClick={() => setEditing(true)} className="btn-secondary py-1.5 px-3 text-sm flex items-center gap-1.5 focus:ring-2 focus:ring-sky-500/20">
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
             Edit Profile
           </button>
@@ -32,7 +32,7 @@ export function ProfileDetails({ intern, editing, setEditing, formik, loading }:
             >
               Cancel
             </button>
-            <button onClick={() => formik.handleSubmit()} disabled={loading} className="btn-primary py-1.5 px-4 text-sm shadow-md flex items-center gap-2 disabled:opacity-70 focus:ring-2 focus:ring-indigo-500/50">
+            <button onClick={() => formik.handleSubmit()} disabled={loading} className="btn-primary py-1.5 px-4 text-sm shadow-md flex items-center gap-2 disabled:opacity-70 focus:ring-2 focus:ring-sky-500/50">
               {loading ? "Saving..." : "Save Changes"}
             </button>
           </div>
@@ -53,11 +53,11 @@ export function ProfileDetails({ intern, editing, setEditing, formik, loading }:
                 value={formik.values.college}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                className={`form-input bg-white/80 ${formik.touched.college && formik.errors.college ? 'border-rose-300 ring-rose-100' : ''}`}
+                className={`form-input bg-white/80 ${formik.touched.college && formik.errors.college ? 'border-red-300 ring-red-100' : ''}`}
                 placeholder="Enter your college"
               />
               {formik.touched.college && formik.errors.college && (
-                <p className="text-rose-500 text-xs font-bold">{formik.errors.college}</p>
+                <p className="text-red-500 text-xs font-bold">{formik.errors.college}</p>
               )}
             </div>
           ) : (
@@ -78,11 +78,11 @@ export function ProfileDetails({ intern, editing, setEditing, formik, loading }:
                 value={formik.values.phone_number}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                className={`form-input bg-white/80 ${formik.touched.phone_number && formik.errors.phone_number ? 'border-rose-300 ring-rose-100' : ''}`}
+                className={`form-input bg-white/80 ${formik.touched.phone_number && formik.errors.phone_number ? 'border-red-300 ring-red-100' : ''}`}
                 placeholder="+1 (555) 000-0000"
               />
               {formik.touched.phone_number && formik.errors.phone_number && (
-                <p className="text-rose-500 text-xs font-bold">{formik.errors.phone_number}</p>
+                <p className="text-red-500 text-xs font-bold">{formik.errors.phone_number}</p>
               )}
             </div>
           ) : (
@@ -104,10 +104,10 @@ export function ProfileDetails({ intern, editing, setEditing, formik, loading }:
                 value={formik.values.start_date}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                className={`form-input bg-white/80 ${formik.touched.start_date && formik.errors.start_date ? 'border-rose-300 ring-rose-100' : ''}`}
+                className={`form-input bg-white/80 ${formik.touched.start_date && formik.errors.start_date ? 'border-red-300 ring-red-100' : ''}`}
               />
               {formik.touched.start_date && formik.errors.start_date && (
-                <p className="text-rose-500 text-xs font-bold">{formik.errors.start_date}</p>
+                <p className="text-red-500 text-xs font-bold">{formik.errors.start_date}</p>
               )}
             </div>
           ) : (

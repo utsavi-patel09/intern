@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import client from "@/lib/apolloClient";
 import { gql } from "@apollo/client";
+import { requireAuth } from "@/lib/auth";
 
 /* =========================
    Interfaces
@@ -124,6 +125,10 @@ mutation ApplyLeave($object:leave_requests_insert_input!){
 ========================= */
 
 export async function POST(req: Request) {
+  // ── Auth: intern only ──
+  const { errorResponse } = await requireAuth(["intern"]);
+  if (errorResponse) return errorResponse;
+
   try {
 
     const body: ApplyLeavePayload = await req.json();

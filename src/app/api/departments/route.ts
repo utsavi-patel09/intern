@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import client from "@/lib/apolloClient";
 import { gql } from "@apollo/client";
+import { requireAuth } from "@/lib/auth";
 
 // ------------------- GraphQL Queries & Mutations -------------------
 
@@ -50,6 +51,10 @@ export interface Department {
 
 // GET Departments
 export async function GET() {
+  // ── Auth: any authenticated user ──
+  const { errorResponse } = await requireAuth();
+  if (errorResponse) return errorResponse;
+
   try {
     const { data } = await client.query<{ departments: Department[] }>({
       query: GET_DEPARTMENTS,
@@ -64,6 +69,10 @@ export async function GET() {
 
 // CREATE Department
 export async function POST(req: Request) {
+  // ── Auth: admin only ──
+  const { errorResponse } = await requireAuth(["admin"]);
+  if (errorResponse) return errorResponse;
+
   try {
     const body: Omit<Department, "id"> = await req.json();
     const { data } = await client.mutate<{ insert_departments_one: Department }>({
@@ -79,6 +88,10 @@ export async function POST(req: Request) {
 
 // UPDATE Department
 export async function PUT(req: Request) {
+  // ── Auth: admin only ──
+  const { errorResponse } = await requireAuth(["admin"]);
+  if (errorResponse) return errorResponse;
+
   try {
     const body: { id: number; name?: string } = await req.json();
     const { id, ...changes } = body;
@@ -95,6 +108,10 @@ export async function PUT(req: Request) {
 
 // DELETE Department
 export async function DELETE(req: Request) {
+  // ── Auth: admin only ──
+  const { errorResponse } = await requireAuth(["admin"]);
+  if (errorResponse) return errorResponse;
+
   try {
     const body: { id: number } = await req.json();
     const { data } = await client.mutate<{ delete_departments_by_pk: { id: number } }>({

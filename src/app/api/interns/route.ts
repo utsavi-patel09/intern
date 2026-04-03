@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import client from "@/lib/apolloClient";
 import { gql } from "@apollo/client";
+import { requireAuth } from "@/lib/auth";
 
 // ==================== GraphQL Query ====================
 
@@ -80,6 +81,10 @@ interface UpdateInternResponse {
 // ==================== API Handler ====================
 
 export async function GET() {
+  // ── Auth: admin only ──
+  const { errorResponse } = await requireAuth(["admin"]);
+  if (errorResponse) return errorResponse;
+
   try {
     const res = await client.query<{ interns: Intern[] }>({
       query: GET_INTERNS,
@@ -114,6 +119,10 @@ export async function GET() {
 
 
 export async function PUT(req: Request) {
+  // ── Auth: any authenticated user ──
+  const { errorResponse } = await requireAuth();
+  if (errorResponse) return errorResponse;
+
   try {
     const { user_id, college, phone_number, start_date } = await req.json();
 

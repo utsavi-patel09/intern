@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import client from "@/lib/apolloClient";
 import { gql } from "@apollo/client";
+import { requireAuth } from "@/lib/auth";
 
 const GET_USER_WITH_INTERN = gql`
   query GetUserWithIntern($id: Int!) {
@@ -43,6 +44,10 @@ interface QueryResponse {
 
 
 export async function GET(req: Request) {
+  // ── Auth: any authenticated user ──
+  const { errorResponse } = await requireAuth();
+  if (errorResponse) return errorResponse;
+
   try {
     const { searchParams } = new URL(req.url);
     const userId = parseInt(searchParams.get("userId") || "", 10);

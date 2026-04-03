@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import client from "@/lib/apolloClient";
 import { gql } from "@apollo/client";
+import { requireAuth } from "@/lib/auth";
 
 // Define a type for the user
 type User = {
@@ -17,6 +18,10 @@ export async function GET(
   req: Request,
   { params }: { params: Promise<{ deptId: string }> }
 ) {
+  // ── Auth: admin or manager only ──
+  const { errorResponse } = await requireAuth(["admin", "manager"]);
+  if (errorResponse) return errorResponse;
+
   const { deptId } = await params;
 
   const query = gql`

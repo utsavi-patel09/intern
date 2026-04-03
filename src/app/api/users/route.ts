@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import client from "@/lib/apolloClient";
 import { gql } from "@apollo/client";
 import bcrypt from "bcryptjs";
+import { requireAuth } from "@/lib/auth";
 
 // ---------------------- GraphQL Queries & Mutations ----------------------
 const GET_USERS = gql`
@@ -100,6 +101,10 @@ mutation DeleteLeaveBalance($user_id: Int!) {
 
 // ---------------------- GET Users ----------------------
 export async function GET() {
+  // ── Auth: admin only ──
+  const { errorResponse } = await requireAuth(["admin"]);
+  if (errorResponse) return errorResponse;
+
   try {
     const { data } = await client.query<{ users: any[] }>({
       query: GET_USERS,
@@ -114,6 +119,10 @@ export async function GET() {
 
 // ---------------------- CREATE User ----------------------
 export async function POST(req: Request) {
+  // ── Auth: admin only ──
+  const { errorResponse } = await requireAuth(["admin"]);
+  if (errorResponse) return errorResponse;
+
   try {
     const body = await req.json();
     const { college, ...userPayload } = body;
@@ -181,6 +190,10 @@ export async function POST(req: Request) {
 
 // ---------------------- UPDATE User ----------------------
 export async function PUT(req: Request) {
+  // ── Auth: admin only ──
+  const { errorResponse } = await requireAuth(["admin"]);
+  if (errorResponse) return errorResponse;
+
   try {
     const body = await req.json();
     const { id, email, password, role, college, ...changes } = body;
@@ -300,6 +313,10 @@ export async function PUT(req: Request) {
 
 // ---------------------- DELETE User ----------------------
 export async function DELETE(req: Request) {
+  // ── Auth: admin only ──
+  const { errorResponse } = await requireAuth(["admin"]);
+  if (errorResponse) return errorResponse;
+
   try {
     const body = await req.json();
     const { id } = body;

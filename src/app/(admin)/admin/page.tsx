@@ -44,7 +44,7 @@ export default function AdminDashboard() {
   if (loading) {
     return (
       <div className="flex flex-col justify-center items-center min-h-[70vh]">
-        <div className="w-12 h-12 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin mb-4"></div>
+        <div className="w-12 h-12 border-4 border-sky-100 border-t-[#1E3A5F] rounded-full animate-spin mb-4"></div>
         <div className="text-slate-500 font-medium font-heading tracking-wide">Loading dashboard...</div>
       </div>
     );
@@ -70,8 +70,8 @@ export default function AdminDashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
 
         {/* USERS CARD */}
-        <div className="card-glass p-6 group lg:col-span-2 relative overflow-hidden bg-white/50">
-          <div className="absolute top-0 right-0 w-48 h-48 bg-indigo-500/10 rounded-full blur-3xl -mr-16 -mt-16 transition-transform duration-700 group-hover:scale-150"></div>
+        <div className="card-glass p-6 group lg:col-span-2 relative overflow-hidden bg-white/60">
+          <div className="absolute top-0 right-0 w-48 h-48 bg-[#1E3A5F]/[0.06] rounded-full blur-3xl -mr-16 -mt-16 transition-transform duration-700 group-hover:scale-150"></div>
 
           <div className="relative z-10 flex justify-between items-start">
             <div>
@@ -84,7 +84,7 @@ export default function AdminDashboard() {
               </div>
             </div>
 
-            <div className="w-16 h-16 rounded-2xl bg-indigo-50 border border-indigo-100/50 flex items-center justify-center shadow-sm group-hover:bg-indigo-600 group-hover:text-white group-hover:shadow-[0_0_20px_rgba(79,70,229,0.4)] transition-all duration-500 text-indigo-600">
+            <div className="w-16 h-16 rounded-2xl bg-sky-50 border border-sky-100/50 flex items-center justify-center shadow-sm group-hover:bg-[#1E3A5F] group-hover:text-white group-hover:shadow-[0_0_20px_rgba(30,58,95,0.3)] transition-all duration-500 text-[#1E3A5F]">
               <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
               </svg>
@@ -93,8 +93,8 @@ export default function AdminDashboard() {
         </div>
 
         {/* INTERNS CARD */}
-        <div className="card-glass p-6 group lg:col-span-2 relative overflow-hidden bg-white/50">
-          <div className="absolute top-0 right-0 w-48 h-48 bg-pink-500/10 rounded-full blur-3xl -mr-16 -mt-16 transition-transform duration-700 group-hover:scale-150"></div>
+        <div className="card-glass p-6 group lg:col-span-2 relative overflow-hidden bg-white/60">
+          <div className="absolute top-0 right-0 w-48 h-48 bg-sky-500/[0.06] rounded-full blur-3xl -mr-16 -mt-16 transition-transform duration-700 group-hover:scale-150"></div>
 
           <div className="relative z-10 flex justify-between items-start">
             <div>
@@ -106,7 +106,7 @@ export default function AdminDashboard() {
 
               </div>
             </div>
-            <div className="w-16 h-16 rounded-2xl bg-pink-50 border border-pink-100/50 flex items-center justify-center shadow-sm group-hover:bg-pink-500 group-hover:text-white group-hover:shadow-[0_0_20px_rgba(236,72,153,0.4)] transition-all duration-500 text-pink-500">
+            <div className="w-16 h-16 rounded-2xl bg-sky-50 border border-sky-100/50 flex items-center justify-center shadow-sm group-hover:bg-sky-500 group-hover:text-white group-hover:shadow-[0_0_20px_rgba(14,165,233,0.3)] transition-all duration-500 text-sky-500">
               <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path d="M12 14l9-5-9-5-9 5 9 5z" />
                 <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
@@ -122,11 +122,11 @@ export default function AdminDashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
         {/* DEPARTMENT TABLE */}
-        <div className="lg:col-span-2 table-container shadow-[0_8px_30px_rgb(0,0,0,0.04)] bg-white/60">
-          <div className="px-6 py-5 border-b border-slate-200/60 flex justify-between items-center bg-white/40 backdrop-blur-md">
+        <div className="lg:col-span-2 table-container shadow-[0_8px_30px_rgb(0,0,0,0.04)] bg-white/70">
+          <div className="px-6 py-5 border-b border-slate-200/60 flex justify-between items-center bg-white/50 backdrop-blur-md">
             <h2 className="section-title flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-indigo-100/50 flex items-center justify-center text-indigo-500">
-                <svg className="w-5 h-5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <div className="w-8 h-8 rounded-lg bg-sky-50 flex items-center justify-center text-[#1E3A5F]">
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                 </svg>
               </div>
@@ -156,17 +156,17 @@ export default function AdminDashboard() {
                   </tr>
                 ) : (
                   stats.departmentCounts.map((d) => (
-                    <tr key={d.department} className="table-row group bg-white/40">
+                    <tr key={d.department} className="table-row group bg-white/50">
                       <td className="table-td py-4">
                         <div className="flex items-center gap-3.5">
-                          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-50 to-indigo-100/50 flex items-center justify-center text-indigo-600 group-hover:scale-110 group-hover:shadow-sm transition-all duration-300">
+                          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-50 to-sky-100/50 flex items-center justify-center text-[#1E3A5F] group-hover:scale-110 group-hover:shadow-sm transition-all duration-300">
                             <span className="font-black text-sm">{d.department.charAt(0)}</span>
                           </div>
-                          <span className="font-bold text-slate-700 group-hover:text-indigo-600 transition-colors">{d.department}</span>
+                          <span className="font-bold text-slate-700 group-hover:text-[#1E3A5F] transition-colors">{d.department}</span>
                         </div>
                       </td>
                       <td className="table-td text-right py-4">
-                        <span className="inline-flex items-center justify-center min-w-[2.75rem] px-3 py-1.5 rounded-xl text-sm font-black bg-white border border-slate-200 text-slate-700 shadow-sm group-hover:bg-indigo-600 group-hover:border-indigo-600 group-hover:text-white transition-all duration-300">
+                        <span className="inline-flex items-center justify-center min-w-[2.75rem] px-3 py-1.5 rounded-xl text-sm font-black bg-white border border-slate-200 text-slate-700 shadow-sm group-hover:bg-[#1E3A5F] group-hover:border-[#1E3A5F] group-hover:text-white transition-all duration-300">
                           {d.count}
                         </span>
                       </td>

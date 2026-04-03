@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import client from "@/lib/apolloClient";
 import { gql } from "@apollo/client";
+import { requireAuth } from "@/lib/auth";
 
 const GET_USER = gql`
   query GetUser($id: Int!) {
@@ -24,6 +25,10 @@ const UPDATE_PASSWORD = gql`
 `;
 
 export async function PUT(req: Request) {
+  // ── Auth: any authenticated user ──
+  const { errorResponse } = await requireAuth();
+  if (errorResponse) return errorResponse;
+
   try {
     const { user_id, current_password, new_password } = await req.json();
 

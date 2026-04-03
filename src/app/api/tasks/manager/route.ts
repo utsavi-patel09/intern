@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import client from "@/lib/apolloClient";
 import { gql } from "@apollo/client";
+import { requireAuth } from "@/lib/auth";
 
 
 type Task = {
@@ -16,6 +17,10 @@ type GetTasksResponse = {
   tasks: Task[]
 }
 export async function GET() {
+  // ── Auth: admin or manager only ──
+  const { errorResponse } = await requireAuth(["admin", "manager"]);
+  if (errorResponse) return errorResponse;
+
   const query = gql`
     query {
       tasks {
@@ -38,6 +43,10 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
+  // ── Auth: admin or manager only ──
+  const { errorResponse } = await requireAuth(["admin", "manager"]);
+  if (errorResponse) return errorResponse;
+
   const body = await req.json();
 
   const mutation = gql`
@@ -72,6 +81,10 @@ export async function POST(req: Request) {
 }
 
 export async function PUT(req: Request) {
+  // ── Auth: admin or manager only ──
+  const { errorResponse } = await requireAuth(["admin", "manager"]);
+  if (errorResponse) return errorResponse;
+
   const body = await req.json();
 
   const mutation = gql`
@@ -99,6 +112,10 @@ export async function PUT(req: Request) {
 }
 
 export async function DELETE(req: Request) {
+  // ── Auth: admin or manager only ──
+  const { errorResponse } = await requireAuth(["admin", "manager"]);
+  if (errorResponse) return errorResponse;
+
   const { id } = await req.json();
 
   const mutation = gql`

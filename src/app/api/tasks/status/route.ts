@@ -1,8 +1,13 @@
 import { NextResponse } from "next/server";
 import client from "@/lib/apolloClient";
 import { gql } from "@apollo/client";
+import { requireAuth } from "@/lib/auth";
 
 export async function PUT(req: Request) {
+  // ── Auth: any authenticated user ──
+  const { errorResponse } = await requireAuth();
+  if (errorResponse) return errorResponse;
+
   const { id, status } = await req.json();
 
   const mutation = gql`

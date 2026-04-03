@@ -6,30 +6,11 @@ export default function LogoutButton() {
   return (
     <button
       onClick={() => signOut({ callbackUrl: "/login" })}
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        gap: "0.375rem",
-        padding: "0.375rem 0.875rem",
-        borderRadius: "0.5rem",
-        border: "1px solid rgba(227, 29, 29, 0.94)",
-        backgroundColor: "rgba(233, 12, 12, 0.92)",
-        color: "rgba(255, 255, 255, 0.99)",
-        fontSize: "0.8125rem",
-        fontWeight: 500,
-        fontFamily: "var(--font-sans)",
-        cursor: "pointer",
-        transition: "background-color 0.15s ease, border-color 0.15s ease",
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.backgroundColor = "rgba(227, 29, 29, 0.94)";
-        e.currentTarget.style.borderColor = "rgba(227, 29, 29, 0.94)";
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.backgroundColor = "rgba(227, 29, 29, 0.94)";
-        e.currentTarget.style.borderColor = "rgba(227, 29, 29, 0.94)";
-      }}
+      className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg border border-slate-200 bg-white text-slate-600 text-sm font-medium cursor-pointer transition-all duration-200 hover:bg-red-50 hover:border-red-200 hover:text-red-600 shadow-sm"
     >
+      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+      </svg>
       Sign Out
     </button>
   );

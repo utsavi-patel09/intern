@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { requireAuth } from "@/lib/auth";
 
 const SUPERSET_URL = process.env.SUPERSET_URL || 'http://localhost:8088';
 const USERNAME = process.env.SUPERSET_ADMIN_USER || 'admin';
@@ -6,6 +7,10 @@ const PASSWORD = process.env.SUPERSET_ADMIN_PASSWORD || 'admin';
 const DASHBOARD_ID = process.env.SUPERSET_DASHBOARD_ID || '9c396d1f-0fed-4979-a26e-bfc89030c1a2';
 
 export async function GET() {
+  // ── Auth: admin only ──
+  const { errorResponse } = await requireAuth(["admin"]);
+  if (errorResponse) return errorResponse;
+
   try {
     console.log(`[Superset] Connecting to ${SUPERSET_URL} as ${USERNAME}`);
 

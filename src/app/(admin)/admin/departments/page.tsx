@@ -70,9 +70,6 @@ export default function DepartmentManager() {
     fetchDepartments();
   }, []);
 
-  // ADD OR UPDATE
-  //handleSubmit logic moved to formik
-
   // EDIT BUTTON
   const handleEdit = (dept: Department) => {
     formik.setValues({ name: dept.name });
@@ -99,7 +96,7 @@ export default function DepartmentManager() {
   if (initialLoading) {
     return (
       <div className="flex flex-col justify-center items-center min-h-[70vh]">
-        <div className="w-12 h-12 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin mb-4"></div>
+        <div className="w-12 h-12 border-4 border-sky-100 border-t-[#1E3A5F] rounded-full animate-spin mb-4"></div>
         <div className="text-slate-500 font-medium font-heading tracking-wide">Loading departments...</div>
       </div>
     );
@@ -119,10 +116,10 @@ export default function DepartmentManager() {
       </div>
 
       {/* FORM CARD */}
-      <div className="card-glass bg-white/50 p-6 mb-10">
+      <div className="card-glass bg-white/60 p-6 mb-10">
         <h2 className="section-title mb-5 flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-pink-100/50 flex items-center justify-center text-pink-500">
-            <svg className="w-5 h-5 text-pink-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div className="w-8 h-8 rounded-lg bg-sky-50 flex items-center justify-center text-sky-600">
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
             </svg>
           </div>
@@ -139,10 +136,10 @@ export default function DepartmentManager() {
               value={formik.values.name}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              className={`form-input bg-white/80 focus:bg-white ${formik.touched.name && formik.errors.name ? 'border-rose-300 ring-rose-100' : ''}`}
+              className={`form-input bg-white/80 focus:bg-white ${formik.touched.name && formik.errors.name ? 'border-red-300 ring-red-100' : ''}`}
             />
             {formik.touched.name && formik.errors.name && (
-              <p className="text-rose-500 text-xs font-bold mt-2">{formik.errors.name}</p>
+              <p className="text-red-500 text-xs font-bold mt-2">{formik.errors.name}</p>
             )}
           </div>
           <div className="flex gap-3 w-full md:w-auto mt-7">
@@ -161,7 +158,7 @@ export default function DepartmentManager() {
             <button
               type="submit"
               disabled={loading}
-              className="btn-primary w-full md:w-auto shadow-lg shadow-indigo-500/25 disabled:opacity-70 flex justify-center"
+              className="btn-primary w-full md:w-auto shadow-lg shadow-[#1E3A5F]/20 disabled:opacity-70 flex justify-center"
             >
               {loading
                 ? editingDeptId
@@ -176,18 +173,18 @@ export default function DepartmentManager() {
       </div>
 
       {/* DEPARTMENT TABLE */}
-      <div className="table-container shadow-[0_8px_30px_rgb(0,0,0,0.04)] bg-white/60">
-        <div className="px-6 py-5 border-b border-slate-200/60 flex justify-between items-center bg-white/40 backdrop-blur-md">
+      <div className="table-container shadow-[0_8px_30px_rgb(0,0,0,0.04)] bg-white/70">
+        <div className="px-6 py-5 border-b border-slate-200/60 flex justify-between items-center bg-white/50 backdrop-blur-md">
           <h2 className="section-title flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-indigo-100/50 flex items-center justify-center text-indigo-500">
+            <div className="w-8 h-8 rounded-lg bg-sky-50 flex items-center justify-center text-[#1E3A5F]">
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
               </svg>
             </div>
             Active Departments
           </h2>
-          <div className="flex bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full text-xs font-bold items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>
+          <div className="flex bg-sky-50 text-[#1E3A5F] px-3 py-1 rounded-full text-xs font-bold items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-sky-500 animate-pulse"></span>
             {departments.length} Total
           </div>
         </div>
@@ -215,27 +212,27 @@ export default function DepartmentManager() {
                 </tr>
               ) : (
                 departments.map((dept) => (
-                  <tr key={dept.id} className="table-row group bg-white/40 hover:bg-white/80 transition-colors">
+                  <tr key={dept.id} className="table-row group bg-white/50 hover:bg-white/85 transition-colors">
                     <td className="table-td py-5">
                       <div className="flex items-center gap-3.5">
-                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-50 to-indigo-100/50 flex items-center justify-center text-indigo-600 group-hover:scale-110 group-hover:shadow-sm transition-all duration-300">
+                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-50 to-sky-100/50 flex items-center justify-center text-[#1E3A5F] group-hover:scale-110 group-hover:shadow-sm transition-all duration-300">
                           <span className="font-black text-sm">{dept.name.charAt(0).toUpperCase()}</span>
                         </div>
-                        <span className="font-bold text-slate-800 text-base group-hover:text-indigo-700 transition-colors">{dept.name}</span>
+                        <span className="font-bold text-slate-800 text-base group-hover:text-[#1E3A5F] transition-colors">{dept.name}</span>
                       </div>
                     </td>
                     <td className="table-td py-5 text-right">
                       <div className="flex items-center justify-end gap-3">
                         <button
                           onClick={() => handleEdit(dept)}
-                          className="p-2 rounded-lg text-indigo-500 hover:bg-indigo-50 hover:text-indigo-700 transition-colors flex items-center gap-1.5 font-bold text-sm"
+                          className="p-2 rounded-lg text-sky-600 hover:bg-sky-50 hover:text-[#1E3A5F] transition-colors flex items-center gap-1.5 font-bold text-sm"
                         >
                           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
                           Edit
                         </button>
                         <button
                           onClick={() => handleDelete(dept.id)}
-                          className="p-2 rounded-lg text-rose-500 hover:bg-rose-50 hover:text-rose-700 transition-colors flex items-center gap-1.5 font-bold text-sm"
+                          className="p-2 rounded-lg text-red-500 hover:bg-red-50 hover:text-red-700 transition-colors flex items-center gap-1.5 font-bold text-sm"
                         >
                           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                           Delete

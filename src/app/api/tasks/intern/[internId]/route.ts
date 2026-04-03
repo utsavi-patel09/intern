@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import client from "@/lib/apolloClient";
 import { gql } from "@apollo/client";
+import { requireAuth } from "@/lib/auth";
 
 type Task = {
   id: number;
@@ -19,6 +20,9 @@ export async function GET(
   context: { params: Promise<{ internId: string }> }
 ) {
   try {
+    // ── Auth: any authenticated user ──
+    const { errorResponse } = await requireAuth();
+    if (errorResponse) return errorResponse;
 
     const { internId } = await context.params;
 

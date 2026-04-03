@@ -12,7 +12,7 @@ import { PasswordModal } from "@/components/features/intern/PasswordModal";
 export default function InternDashboard() {
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const { data: session } = useSession();
-  const userId = session?.user?.id;
+  const userId = session?.user?.id ? Number(session.user.id) : undefined;
 
   const {
     intern,
@@ -39,7 +39,7 @@ export default function InternDashboard() {
   if (!intern || dataLoading) {
     return (
       <div className="flex flex-col justify-center items-center min-h-[70vh]">
-        <div className="w-12 h-12 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin mb-4"></div>
+        <div className="w-12 h-12 border-4 border-sky-100 border-t-[#1E3A5F] rounded-full animate-spin mb-4"></div>
         <div className="text-slate-500 font-medium font-heading tracking-wide">
           {dataLoading ? "Updating your profile..." : "Loading your profile..."}
         </div>
@@ -60,7 +60,7 @@ export default function InternDashboard() {
         <div className="flex items-center gap-3">
           <button
             onClick={() => setShowPasswordModal(true)}
-            className="btn-secondary flex items-center gap-2 bg-white/40 shadow-sm hover:bg-white/80"
+            className="btn-secondary flex items-center gap-2 bg-white/50 shadow-sm hover:bg-white/80"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
