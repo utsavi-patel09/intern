@@ -1,5 +1,7 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { log } from "console";
+import { cookies } from "next/headers";
 
 
 interface User {
@@ -37,10 +39,20 @@ export default async function ManagerPage() {
     );
   }
 
-  const res = await fetch(
-    `${process.env.NEXTAUTH_URL}/api/manager?userId=${session.user.id}`,
-    { cache: "no-store" }
-  );
+const cookieStore = await cookies();
+
+const cookieHeader = cookieStore
+  .getAll()
+  .map((c) => `${c.name}=${c.value}`)
+  .join("; ");
+
+const res = await fetch(`${process.env.NEXTAUTH_URL}/api/manager`, {
+  cache: "no-store",
+  headers: {
+    cookie: cookieHeader,
+  },
+});
+  log("Fetching manager data from API:", res.url, "Status:", res.status);
 
   if (!res.ok) {
     return (

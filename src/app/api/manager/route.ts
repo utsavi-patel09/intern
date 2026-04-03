@@ -1,3 +1,4 @@
+// ================= API =================
 import { NextResponse } from "next/server";
 import client from "@/lib/apolloClient";
 import { gql } from "@apollo/client";
@@ -75,22 +76,18 @@ interface GetInternsResponse {
   users: InternUser[];
 }
 
+
+
 // ================= API =================
 export async function GET(req: Request) {
+
   // ── Auth: admin or manager only ──
-  const { errorResponse } = await requireAuth(["admin", "manager"]);
+  const { session, errorResponse } = await requireAuth(["admin", "manager"]);
   if (errorResponse) return errorResponse;
 
-  try {
-    const { searchParams } = new URL(req.url);
-    const userId = Number(searchParams.get("userId"));
+  const userId = session.user.id;   // ✅ take id from session
 
-    if (!userId) {
-      return NextResponse.json(
-        { error: "UserId required" },
-        { status: 400 }
-      );
-    }
+  try {
 
     // ===== Fetch Manager =====
     const managerResult = await client.query<GetManagerResponse>({
@@ -117,7 +114,6 @@ export async function GET(req: Request) {
 
     const internsRaw = internsResult.data?.users || [];
 
-    // ===== Flatten Intern Data =====
     const interns = internsRaw.map((u) => ({
       id: u.id,
       name: u.name,
@@ -128,7 +124,6 @@ export async function GET(req: Request) {
       start_date: u.intern?.start_date ?? "",
     }));
 
-    // ===== Flatten Manager =====
     const manager = {
       id: managerData.id,
       name: managerData.name,
@@ -137,10 +132,7 @@ export async function GET(req: Request) {
       department: managerData.department.name,
     };
 
-    return NextResponse.json({
-      manager,
-      interns,
-    });
+    return NextResponse.json({ manager, interns });
 
   } catch (err) {
     console.error("Manager API error:", err);
