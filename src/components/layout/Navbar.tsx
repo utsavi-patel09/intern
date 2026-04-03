@@ -17,9 +17,7 @@ export default function Navbar() {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 10);
-    };
+    
 
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -27,11 +25,9 @@ export default function Navbar() {
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
     document.addEventListener("mousedown", handleClickOutside);
 
     return () => {
-      window.removeEventListener("scroll", handleScroll);
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
@@ -50,7 +46,8 @@ export default function Navbar() {
   };
 
   const dropdownLinks = [
-   
+
+    { name: "Analytics", href: "/admin/dashboard", show: role === "admin" },
     { name: "Manage Users", href: "/admin/users", show: role === "admin" },
     { name: "Manage Interns", href: "/admin/interns", show: role === "admin" },
     { name: "Manage Departments", href: "/admin/departments", show: role === "admin" },
