@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
-import { Intern, Department } from "@/types";
+import { Intern } from "@/types";
+import { useDepartments } from "@/context/DepartmentContext";
 
 export function useInternProfile(userId: number | undefined) {
   const [intern, setIntern] = useState<Intern | null>(null);
-  const [departments, setDepartments] = useState<Department[]>([]);
+  const { departments, loading: depsLoading } = useDepartments();
   const [loading, setLoading] = useState(false);
   const [editing, setEditing] = useState(false);
 
@@ -13,11 +14,6 @@ export function useInternProfile(userId: number | undefined) {
     try {
       const internRes = await fetch(`/api/data?userId=${userId}`);
       const userIntern = await internRes.json();
-
-      const deptRes = await fetch("/api/departments");
-      const deptData = await deptRes.json();
-
-      setDepartments(deptData.departments || []);
 
       if (!userIntern.error) {
         setIntern(userIntern);

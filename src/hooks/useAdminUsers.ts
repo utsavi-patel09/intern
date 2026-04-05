@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
-import { User, Department } from "@/types";
+import { User } from "@/types";
+import { useDepartments } from "@/context/DepartmentContext";
 
 export function useAdminUsers() {
   const [users, setUsers] = useState<User[]>([]);
-  const [departments, setDepartments] = useState<Department[]>([]);
+  const { departments, loading: depsLoading } = useDepartments();
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [activeRole, setActiveRole] = useState<string>("manager");
@@ -18,16 +19,6 @@ export function useAdminUsers() {
       console.error("Fetch users error:", err);
     } finally {
       setLoading(false);
-    }
-  }, []);
-
-  const fetchDepartments = useCallback(async () => {
-    try {
-      const res = await fetch("/api/departments");
-      const data = await res.json();
-      setDepartments(data?.departments || []);
-    } catch (err) {
-      console.error("Fetch departments error:", err);
     }
   }, []);
 
@@ -49,8 +40,7 @@ export function useAdminUsers() {
 
   useEffect(() => {
     fetchUsers();
-    fetchDepartments();
-  }, [fetchUsers, fetchDepartments]);
+  }, [fetchUsers]);
 
   const filteredUsers = users.filter((u) => {
     if (!u) return false;

@@ -3,17 +3,13 @@
 import { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-
-interface Department {
-  id: number;
-  name: string;
-}
+import { useDepartments } from "@/context/DepartmentContext";
+import { Department } from "@/types";
 
 export default function DepartmentManager() {
-  const [departments, setDepartments] = useState<Department[]>([]);
+  const { departments, loading: depsLoading, refreshDepartments } = useDepartments();
   const [editingDeptId, setEditingDeptId] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
-  const [initialLoading, setInitialLoading] = useState(true);
 
   const formik = useFormik({
     initialValues: { name: "" },
@@ -30,9 +26,7 @@ export default function DepartmentManager() {
             body: JSON.stringify({ id: editingDeptId, name: values.name }),
           });
           const data = await res.json();
-          setDepartments((prev) =>
-            prev.map((d) => (d.id === editingDeptId ? data.department : d))
-          );
+          await refreshDepartments();
           setEditingDeptId(null);
         } else {
           const res = await fetch("/api/departments", {
@@ -41,7 +35,7 @@ export default function DepartmentManager() {
             body: JSON.stringify({ name: values.name }),
           });
           const data = await res.json();
-          setDepartments((prev) => [...prev, data.department]);
+          await refreshDepartments();
         }
         formik.resetForm();
       } catch (err) {
@@ -53,22 +47,7 @@ export default function DepartmentManager() {
     },
   });
 
-  // FETCH DEPARTMENTS
-  const fetchDepartments = async () => {
-    try {
-      const res = await fetch("/api/departments");
-      const data = await res.json();
-      setDepartments(data.departments || []);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setInitialLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchDepartments();
-  }, []);
+  // REMOVED LOCAL FETCHING LOGIC
 
   // EDIT BUTTON
   const handleEdit = (dept: Department) => {
@@ -87,13 +66,13 @@ export default function DepartmentManager() {
         body: JSON.stringify({ id }),
       });
 
-      setDepartments((prev) => prev.filter((d) => d.id !== id));
+      await refreshDepartments();
     } catch (err) {
       console.error(err);
     }
   };
 
-  if (initialLoading) {
+  if (depsLoading) {
     return (
       <div className="flex flex-col justify-center items-center min-h-[70vh]">
         <div className="w-12 h-12 border-4 border-sky-100 border-t-[#1E3A5F] rounded-full animate-spin mb-4"></div>

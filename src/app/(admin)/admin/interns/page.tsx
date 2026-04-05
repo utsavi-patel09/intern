@@ -2,11 +2,7 @@
 
 
 import { useEffect, useState } from "react";
-
-interface Department {
-  id: number;
-  name: string;
-}
+import { useDepartments } from "@/context/DepartmentContext";
 
 interface InternWithUser {
   id: number;
@@ -24,7 +20,7 @@ interface InternWithUser {
 
 export default function InternsPage() {
   const [interns, setInterns] = useState<InternWithUser[]>([]);
-  const [departments, setDepartments] = useState<Department[]>([]);
+  const { departments, loading: depsLoading } = useDepartments();
   const [filterCollege, setFilterCollege] = useState("");
   const [filterDepartment, setFilterDepartment] = useState<number | "">("");
   const [search, setSearch] = useState("");
@@ -36,11 +32,7 @@ export default function InternsPage() {
         const internsRes = await fetch("/api/interns");
         const internsData = await internsRes.json();
 
-        const deptRes = await fetch("/api/departments");
-        const deptData = await deptRes.json();
-
         setInterns(Array.isArray(internsData) ? internsData : []);
-        setDepartments(deptData.departments || []);
       } catch (error) {
         console.error("Error loading data:", error);
       } finally {

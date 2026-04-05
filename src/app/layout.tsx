@@ -2,6 +2,7 @@
 
 import { SessionProvider } from "next-auth/react";
 import Navbar from "@/components/layout/Navbar";
+import { DepartmentProvider } from "@/context/DepartmentContext";
 import "./globals.css";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -16,10 +17,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </div>
 
         <SessionProvider>
-          <Navbar />
-          <div className="pt-24 pb-12 min-h-screen flex flex-col">
-            {children}
-          </div>
+          <DepartmentProvider>
+            <Navbar />
+            <div className="pt-24 pb-12 min-h-screen flex flex-col">
+              {children}
+            </div>
+          </DepartmentProvider>
         </SessionProvider>
       </body>
     </html>
