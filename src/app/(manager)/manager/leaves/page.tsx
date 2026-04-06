@@ -10,7 +10,7 @@ interface Leave {
   end_date: string;
   reason: string;
   status: string;
-  users_by_user_id: {
+  userByUserId: {
     name: string;
   };
 }
@@ -104,7 +104,7 @@ export default function ManagerLeaves() {
                   key={leave.id}
                   className="table-row group bg-white/50 hover:bg-white/85 transition-colors"
                 >
-                <td className="table-td font-bold text-slate-800">{leave.users_by_user_id.name}</td>
+                <td className="table-td font-bold text-slate-800">{leave.userByUserId?.name}</td>
                 <td className="table-td text-slate-600">{leave.leave_type}</td>
                 <td className="table-td text-slate-600">
                   {new Date(leave.start_date).toLocaleDateString()}

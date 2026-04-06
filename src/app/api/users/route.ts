@@ -263,8 +263,6 @@ export async function PUT(req: Request) {
 
     // -------- INTERN + LEAVE BALANCE SYNC --------
 
-    // -------- INTERN + LEAVE BALANCE SYNC --------
-
 if (role === "intern") {
 
   const { data: existingIntern } = await client.query<{ interns: any[] }>({

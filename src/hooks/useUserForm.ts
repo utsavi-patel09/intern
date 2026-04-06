@@ -25,58 +25,90 @@ export function useUserForm({ onSuccess, departments }: UseUserFormProps) {
       college: "",
     },
     enableReinitialize: true,
-    validationSchema: Yup.object().shape({
-      name: Yup.string().min(3, "Name must be at least 3 characters").required("Required"),
-      email: Yup.string().email("Invalid email format").required("Required"),
+
+    validationSchema: Yup.object({
+      name: Yup.string()
+        .min(3, "Name must be at least 3 characters")
+        .required("Required"),
+
+      email: Yup.string()
+        .email("Invalid email format")
+        .required("Required"),
+
       password: Yup.string()
-        .test("password-required", "Password is required", (value) => {
-          if (!editingUserId && !value) return false;
-          return true;
-        })
         .min(6, "Password must be at least 6 characters")
         .matches(/[a-z]/, "Must contain at least one lowercase letter")
         .matches(/[A-Z]/, "Must contain at least one uppercase letter")
         .matches(/[0-9]/, "Must contain at least one number")
-        .matches(/[@$!%*?&]/, "Must contain at least one special character"),
+        .matches(/[@$!%*?&]/, "Must contain at least one special character")
+        .test(
+          "password-required",
+          "Password is required",
+          function (value) {
+            if (!editingUserId && !value) return false;
+            return true;
+          }
+        ),
+
       role: Yup.string().required("Required"),
+
       department_id: Yup.number().nullable(),
+
       college: Yup.string().when("role", {
         is: "intern",
         then: (schema) => schema.required("College is required for interns"),
       }),
     }),
+
     onSubmit: async (values) => {
       setCreateLoading(true);
       setApiError("");
       setEmailError("");
 
       try {
-        let hashedPassword = values.password;
-        if (values.password) {
+
+        let hashedPassword: string | undefined = undefined;
+
+        // ✅ Hash only if password entered
+        if (values.password && values.password.trim() !== "") {
           hashedPassword = await bcrypt.hash(values.password, 10);
         }
 
         const method = editingUserId ? "PUT" : "POST";
+
         const payload: any = {
           name: values.name,
           email: values.email,
           role: values.role,
         };
 
-        if (values.role === "intern") payload.college = values.college;
-        if (hashedPassword) payload.password = hashedPassword;
-        
+        // ✅ Add password only if user entered one
+        if (hashedPassword) {
+          payload.password = hashedPassword;
+        }
+
+        // Intern college
+        if (values.role === "intern") {
+          payload.college = values.college;
+        }
+
+        // Department logic
         if (values.role === "admin") {
           payload.department_id = null;
         } else if (values.department_id !== null) {
           payload.department_id = values.department_id;
         }
-        
-        if (editingUserId) payload.id = editingUserId;
+
+        // Edit case
+        if (editingUserId) {
+          payload.id = editingUserId;
+        }
 
         const res = await fetch("/api/users", {
           method,
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify(payload),
         });
 
@@ -92,7 +124,9 @@ export function useUserForm({ onSuccess, departments }: UseUserFormProps) {
         }
 
         onSuccess(data.user, !editingUserId);
+
         formik.resetForm();
+
       } catch (err) {
         console.error(err);
         setApiError("Something went wrong");
@@ -104,10 +138,11 @@ export function useUserForm({ onSuccess, departments }: UseUserFormProps) {
 
   const startEditing = (user: User) => {
     setEditingUserId(user.id);
+
     formik.setValues({
       name: user.name || "",
       email: user.email || "",
-      password: "",
+      password: "", // keep empty for security
       role: user.role || "manager",
       department_id: user.department_id,
       college: user.intern?.college || "",
@@ -116,15 +151,16 @@ export function useUserForm({ onSuccess, departments }: UseUserFormProps) {
 
   const startCreating = (defaultRole: string) => {
     setEditingUserId(null);
+
     formik.resetForm({
       values: {
         name: "",
         email: "",
         password: "",
-        role: defaultRole === 'all' ? 'manager' : defaultRole,
+        role: defaultRole === "all" ? "manager" : defaultRole,
         department_id: null,
         college: "",
-      }
+      },
     });
   };
 

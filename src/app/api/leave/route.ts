@@ -21,20 +21,24 @@ interface LeaveResponse {
 }
 
 const GET_LEAVES = gql`
-query GetLeaves($user_id:Int!) {
+query GetLeaves($manager_id:Int!) {
   leave_requests(
-    where:{manager_id:{_eq:$user_id}}
+    where:{manager_id:{_eq:$manager_id}}
     order_by:{applied_at:desc}
   ){
     id
+    user_id
     leave_type
     start_date
     end_date
     reason
     status
-    users_by_user_id {
+    userByUserId {
+      
       name
+      
     }
+    
   }
 }
 `;
@@ -54,13 +58,13 @@ export async function GET() {
       );
     }
 
-    const user_id = Number(session.user.id);
+    const manager_id = Number(session.user.id);
 
     /* Fetch leave requests */
 
     const result = await client.query<LeaveResponse>({
       query: GET_LEAVES,
-      variables:{ user_id },
+      variables:{ manager_id: manager_id },
       fetchPolicy:"no-cache"
     });
 
