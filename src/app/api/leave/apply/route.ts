@@ -180,15 +180,16 @@ export async function POST(req: Request) {
 
     const managerQuery = await client.query<ManagerResponse>({
       query: GET_MANAGER,
-      variables: { department_id },
+      variables: { department_id: Number(department_id) },
       fetchPolicy: "no-cache"
     });
 
-    const manager_id = managerQuery?.data?.users?.[0]?.id;
+    const managers = managerQuery?.data?.users || [];
+    const manager_id = managers[0]?.id;
 
     if (!manager_id) {
       return NextResponse.json(
-        { error: "Manager not found for this department" },
+        { error: "No manager found for your department. Please contact HR." },
         { status: 400 }
       );
     }
@@ -232,14 +233,11 @@ export async function POST(req: Request) {
       leave: result.data?.insert_leave_requests_one
     });
 
-  } catch (err) {
-
+  } catch (err: any) {
     console.error("Apply Leave Error:", err);
-
     return NextResponse.json(
-      { error: "Failed to apply leave" },
+      { error: err.message || "Failed to apply leave" },
       { status: 500 }
     );
-
   }
 }

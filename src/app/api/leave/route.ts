@@ -21,11 +21,11 @@ interface LeaveResponse {
 }
 
 const GET_LEAVES = gql`
-query GetLeaves($manager_id:Int!) {
+query GetLeaves($department_id: Int!) {
   leave_requests(
-    where:{manager_id:{_eq:$manager_id}}
-    order_by:{applied_at:desc}
-  ){
+    where: { userByUserId: { department_id: { _eq: $department_id } } }
+    order_by: { applied_at: desc }
+  ) {
     id
     user_id
     leave_type
@@ -53,25 +53,29 @@ export async function GET() {
 
     if (!session?.user?.id) {
       return NextResponse.json(
-        { success:false, leaves:[] },
-        { status:401 }
+        { success: false, leaves: [] },
+        { status: 401 }
       );
     }
 
-    const manager_id = Number(session.user.id);
+    const department_id = (session.user as any).department_id;
+
+    if (!department_id) {
+       return NextResponse.json({ success: true, leaves: [] });
+    }
 
     /* Fetch leave requests */
 
     const result = await client.query<LeaveResponse>({
       query: GET_LEAVES,
-      variables:{ manager_id: manager_id },
-      fetchPolicy:"no-cache"
+      variables: { department_id: Number(department_id) },
+      fetchPolicy: "no-cache"
     });
 
     const leaves = result?.data?.leave_requests ?? [];
 
     return NextResponse.json({
-      success:true,
+      success: true,
       leaves
     });
 
@@ -81,11 +85,11 @@ export async function GET() {
 
     return NextResponse.json(
       {
-        success:false,
-        message:"Failed to fetch leave requests",
-        leaves:[]
+        success: false,
+        message: "Failed to fetch leave requests",
+        leaves: []
       },
-      { status:500 }
+      { status: 500 }
     );
 
   }
