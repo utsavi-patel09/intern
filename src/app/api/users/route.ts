@@ -14,6 +14,9 @@ const GET_USERS = gql`
       role
       department_id
       created_at
+      intern {
+        college
+      }
     }
   }
 `;
@@ -97,6 +100,18 @@ mutation DeleteLeaveBalance($user_id: Int!) {
     affected_rows
   }
 }
+`;
+
+
+const UPDATE_INTERN = gql`
+  mutation UpdateIntern($user_id: Int!, $college: String!) {
+    update_interns(
+      where: { user_id: { _eq: $user_id } }
+      _set: { college: $college }
+    ) {
+      affected_rows
+    }
+  }
 `;
 
 // ---------------------- GET Users ----------------------
@@ -248,45 +263,60 @@ export async function PUT(req: Request) {
 
     // -------- INTERN + LEAVE BALANCE SYNC --------
 
-    if (role === "intern" && oldRole !== "intern") {
+    // -------- INTERN + LEAVE BALANCE SYNC --------
 
-      // Add to interns
-      const { data: existingIntern } = await client.query<{ interns: any[] }>({
-        query: gql`
-          query GetIntern($user_id: Int!) {
-            interns(where: { user_id: { _eq: $user_id } }) {
-              id
-            }
-          }
-        `,
-        variables: { user_id: updatedUser?.id },
-        fetchPolicy: "no-cache",
-      });
+if (role === "intern") {
 
-      if ((existingIntern?.interns ?? []).length === 0) {
+  const { data: existingIntern } = await client.query<{ interns: any[] }>({
+    query: gql`
+      query GetIntern($user_id: Int!) {
+        interns(where: { user_id: { _eq: $user_id } }) {
+          id
+        }
+      }
+    `,
+    variables: { user_id: updatedUser?.id },
+    fetchPolicy: "no-cache",
+  });
+
+  // Intern does not exist → create
+  if ((existingIntern?.interns ?? []).length === 0) {
+
         await client.mutate({
           mutation: INSERT_INTERN,
           variables: {
             object: {
               user_id: updatedUser?.id,
-              college: college || "Not Specified"
+              college: college || "Not Specified",
             },
           },
         });
-      }
 
-      // Create leave balance
-      await client.mutate({
-        mutation: INSERT_LEAVE_BALANCE,
-        variables: {
-          object: {
-            user_id: updatedUser?.id,
-            total_leave: 20,
-            used_leave: 0,
-            remaining_leave: 20,
+        // create leave balance only for new intern
+        await client.mutate({
+          mutation: INSERT_LEAVE_BALANCE,
+          variables: {
+            object: {
+              user_id: updatedUser?.id,
+              total_leave: 20,
+              used_leave: 0,
+              remaining_leave: 20,
+            },
           },
-        },
-      });
+        });
+
+      } else {
+
+        // Intern exists → update college
+        await client.mutate({
+          mutation: UPDATE_INTERN,
+          variables: {
+            user_id: updatedUser?.id,
+            college: college || "Not Specified",
+          },
+        });
+
+      }
 
     } else if (oldRole === "intern" && role !== "intern") {
 
@@ -301,8 +331,8 @@ export async function PUT(req: Request) {
         mutation: DELETE_LEAVE_BALANCE,
         variables: { user_id: updatedUser?.id },
       });
-    }
 
+    }
     return NextResponse.json({ user: updatedUser });
 
   } catch (err) {

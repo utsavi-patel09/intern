@@ -6,6 +6,9 @@ export interface User {
   role: string;
   department_id: number | null;
   created_at: string | null;
+   intern?: {
+    college: string;
+  };
 }
 
 export interface Department {
@@ -32,5 +35,5 @@ export interface UserFormData {
   password?: string;
   role: string;
   department_id: number | null;
-  college?: string;
+  college: string;
 }

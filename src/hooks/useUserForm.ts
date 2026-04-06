@@ -110,7 +110,7 @@ export function useUserForm({ onSuccess, departments }: UseUserFormProps) {
       password: "",
       role: user.role || "manager",
       department_id: user.department_id,
-      college: "",
+      college: user.intern?.college || "",
     });
   };
 
