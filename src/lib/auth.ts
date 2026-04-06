@@ -2,17 +2,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { NextResponse } from "next/server";
 
-// ─────────────────────────────────────────────────────────────────────────────
-// API Route Protection Helpers
-// ─────────────────────────────────────────────────────────────────────────────
-// Use these helpers to enforce authentication and role-based authorization
-// in API route handlers.
-//
-// Usage:
-//   const { session, errorResponse } = await requireAuth(["admin"]);
-//   if (errorResponse) return errorResponse;
-//   // session is guaranteed non-null here
-// ─────────────────────────────────────────────────────────────────────────────
+
 
 /**
  * Validates that the current request has an active session.

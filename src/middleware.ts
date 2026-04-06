@@ -2,23 +2,6 @@ import { getToken } from "next-auth/jwt";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Role-Based Route Protection Middleware
-// ─────────────────────────────────────────────────────────────────────────────
-// This middleware intercepts all requests matching the `config.matcher` patterns
-// and enforces two layers of security:
-//
-//   1. AUTHENTICATION — Unauthenticated users are redirected to /login.
-//   2. AUTHORIZATION  — Authenticated users can only access routes that belong
-//                       to their role. Attempting to access another role's
-//                       routes will redirect them to their own dashboard.
-//
-// Route structure:
-//   /admin/*     → admin only
-//   /manager/*   → manager only
-//   /intern/*    → intern only
-//   /login       → unauthenticated users only (logged-in users are redirected)
-// ─────────────────────────────────────────────────────────────────────────────
 
 /** Maps each role to its home/dashboard page */
 const ROLE_HOME: Record<string, string> = {
@@ -84,10 +67,6 @@ export async function middleware(req: NextRequest) {
   return NextResponse.next();
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Matcher: Only run this middleware on these route patterns.
-// Static assets, _next internals, and API routes are excluded by default.
-// ─────────────────────────────────────────────────────────────────────────────
 export const config = {
   matcher: [
     "/login",
