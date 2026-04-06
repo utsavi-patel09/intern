@@ -55,7 +55,7 @@ export function useAdminUsers() {
   return {
     users,
     departments,
-    loading,
+    loading: loading || depsLoading,
     search,
     setSearch,
     activeRole,

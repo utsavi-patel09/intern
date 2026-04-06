@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from "react";
+import { useSession } from "next-auth/react";
 import { Department } from "@/types"; // Make sure Department type is exported from @/types
 
 interface DepartmentContextType {
@@ -14,6 +15,7 @@ const DepartmentContext = createContext<DepartmentContextType | undefined>(undef
 export function DepartmentProvider({ children }: { children: ReactNode }) {
   const [departments, setDepartments] = useState<Department[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const { status } = useSession();
 
   const fetchDepartments = useCallback(async () => {
     setLoading(true);
@@ -29,8 +31,10 @@ export function DepartmentProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    fetchDepartments();
-  }, [fetchDepartments]);
+    if (status === "authenticated") {
+      fetchDepartments();
+    }
+  }, [fetchDepartments, status]);
 
   return (
     <DepartmentContext.Provider value={{ departments, loading, refreshDepartments: fetchDepartments }}>

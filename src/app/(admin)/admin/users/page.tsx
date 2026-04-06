@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAdminUsers } from "@/hooks/useAdminUsers";
 import { useUserForm } from "@/hooks/useUserForm";
 import { UserFilters } from "@/components/features/admin/users/UserFilters";
@@ -20,7 +20,12 @@ export default function AdminUsers() {
     filteredUsers,
     refreshUsers,
     handleDeleteUser,
+
   } = useAdminUsers();
+
+  useEffect(() => {
+    refreshUsers();
+  }, [refreshUsers]);
 
   const {
     formik,
