@@ -56,6 +56,16 @@ export function useUserForm({ onSuccess, departments }: UseUserFormProps) {
         is: "intern",
         then: (schema) => schema.required("College is required for interns"),
       }),
+
+      stipend: Yup.number().when("role", {
+        is: "intern",
+        then: (schema) => schema.required("Stipend is required for interns").min(0, "Stipend must be positive"),
+      }),
+
+      end_date: Yup.string().when("role", {
+        is: "intern",
+        then: (schema) => schema.required("End date is required for interns"),
+      }),
     }),
 
     onSubmit: async (values) => {
