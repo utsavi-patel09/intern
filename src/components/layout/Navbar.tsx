@@ -49,7 +49,6 @@ export default function Navbar() {
 
     { name: "Analytics", href: "/admin/dashboard", show: role === "admin" },
     { name: "Manage Users", href: "/admin/users", show: role === "admin" },
-    { name: "show All Interns", href: "/admin/interns", show: role === "admin" },
     { name: "Manage Departments", href: "/admin/departments", show: role === "admin" },
   ];
 

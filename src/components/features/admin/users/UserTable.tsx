@@ -8,6 +8,8 @@ interface UserTableProps {
 }
 
 export function UserTable({ users, departments, onEdit, onDelete }: UserTableProps) {
+  const hasInterns = users.some(user => user.role === 'intern');
+  
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-left">
@@ -15,6 +17,13 @@ export function UserTable({ users, departments, onEdit, onDelete }: UserTablePro
           <tr>
             <th className="table-th bg-slate-50/50">User Details</th>
             <th className="table-th bg-slate-50/50">Role</th>
+            {hasInterns && (
+              <>
+                <th className="table-th bg-slate-50/50">College</th>
+                <th className="table-th bg-slate-50/50">End Date</th>
+                <th className="table-th bg-slate-50/50">Stipend (₹)</th>
+              </>
+            )}
             <th className="table-th bg-slate-50/50">Department</th>
             <th className="table-th bg-slate-50/50 text-right">Actions</th>
           </tr>
@@ -22,7 +31,7 @@ export function UserTable({ users, departments, onEdit, onDelete }: UserTablePro
         <tbody className="divide-y divide-slate-100">
           {users.length === 0 ? (
             <tr>
-              <td colSpan={4} className="text-center py-16 text-slate-500 bg-white/30 backdrop-blur-sm">
+              <td colSpan={hasInterns ? 7 : 4} className="text-center py-16 text-slate-500 bg-white/30 backdrop-blur-sm">
                 <div className="flex flex-col items-center gap-3">
                   <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
                     <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" /></svg>
@@ -55,6 +64,37 @@ export function UserTable({ users, departments, onEdit, onDelete }: UserTablePro
                     {user.role}
                   </span>
                 </td>
+                {hasInterns && (
+                  <>
+                    <td className="table-td py-4">
+                      {user.role === 'intern' ? (
+                        <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-sm font-medium bg-blue-50 text-blue-700 border border-blue-100">
+                          {user.intern?.college || "-"}
+                        </span>
+                      ) : (
+                        <span className="text-slate-400">-</span>
+                      )}
+                    </td>
+                    <td className="table-td py-4">
+                      {user.role === 'intern' ? (
+                        <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-sm font-medium bg-amber-50 text-amber-700 border border-amber-100">
+                          {user.intern?.end_date ? new Date(user.intern.end_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : "-"}
+                        </span>
+                      ) : (
+                        <span className="text-slate-400">-</span>
+                      )}
+                    </td>
+                    <td className="table-td py-4">
+                      {user.role === 'intern' ? (
+                        <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-sm font-bold bg-emerald-50 text-emerald-700 border border-emerald-100">
+                          {user.intern?.stipend ? `₹${user.intern.stipend.toLocaleString('en-IN')}` : "-"}
+                        </span>
+                      ) : (
+                        <span className="text-slate-400">-</span>
+                      )}
+                    </td>
+                  </>
+                )}
                 <td className="table-td py-4">
                   <span className="inline-flex items-center px-2.5 py-1.5 rounded-lg text-sm font-bold bg-white border border-slate-200 text-slate-600 shadow-sm group-hover:text-slate-800 transition-colors">
                     {user.department_id ? departments.find(d => d.id === user.department_id)?.name || "Unknown" : "No Department"}
