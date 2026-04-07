@@ -62,7 +62,9 @@ export default function AdminUsers() {
       {/* Page Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
         <div>
-          <h1 className="page-title text-slate-900">User Management</h1>
+          <h1 className="page-title text-slate-900">
+            {activeRole === "all" || activeRole === "" ? "User Management" : `${activeRole.charAt(0).toUpperCase() + activeRole.slice(1)} Management`}
+          </h1>
         </div>
         <div className="flex items-center gap-3">
           <button
@@ -75,7 +77,7 @@ export default function AdminUsers() {
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
             </svg>
-            Add User
+            {activeRole === "all" || activeRole === "" ? "Add User" : `Add ${activeRole.charAt(0).toUpperCase() + activeRole.slice(1)}`}
           </button>
         </div>
       </div>

@@ -16,6 +16,9 @@ interface InternWithUser {
   college: string;
   phone_number: string;
   start_date: string;
+  end_date?: string | null;
+  gender?: string | null;
+  stipend?: number | null;
 }
 
 export default function InternsPage() {
@@ -145,14 +148,17 @@ export default function InternsPage() {
                 <th className="table-th bg-slate-50/50">Intern Name</th>
                 <th className="table-th bg-slate-50/50">Contact Info</th>
                 <th className="table-th bg-slate-50/50">College</th>
+                <th className="table-th bg-slate-50/50">Gender</th>
                 <th className="table-th bg-slate-50/50">Department</th>
                 <th className="table-th bg-slate-50/50">Start Date</th>
+                <th className="table-th bg-slate-50/50">End Date</th>
+                <th className="table-th bg-slate-50/50">Stipend (₹)</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
               {filteredData.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="text-center py-16 text-slate-500 bg-white/30 backdrop-blur-sm">
+                  <td colSpan={8} className="text-center py-16 text-slate-500 bg-white/30 backdrop-blur-sm">
                     <div className="flex flex-col items-center gap-3">
                       <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
                         <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
@@ -191,12 +197,27 @@ export default function InternsPage() {
                       </span>
                     </td>
                     <td className="table-td py-4">
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-sm font-medium bg-purple-50 text-purple-700 border border-purple-100">
+                        {item.gender || "-"}
+                      </span>
+                    </td>
+                    <td className="table-td py-4">
                       <span className="inline-flex items-center px-2.5 py-1 rounded-full text-sm font-bold bg-sky-50 text-[#1E3A5F] border border-sky-100 shadow-sm group-hover:bg-sky-100 transition-all duration-300">
                         {getDeptName(item.department_id)}
                       </span>
                     </td>
                     <td className="table-td py-4 text-slate-600 font-medium">
                       {item.start_date ? new Date(item.start_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : "-"}
+                    </td>
+                    <td className="table-td py-4">
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-sm font-medium bg-amber-50 text-amber-700 border border-amber-100">
+                        {item.end_date ? new Date(item.end_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : "-"}
+                      </span>
+                    </td>
+                    <td className="table-td py-4">
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-sm font-bold bg-emerald-50 text-emerald-700 border border-emerald-100">
+                        {item.stipend ? `₹${item.stipend.toLocaleString('en-IN')}` : "-"}
+                      </span>
                     </td>
                   </tr>
                 ))

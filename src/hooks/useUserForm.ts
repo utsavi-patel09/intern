@@ -24,7 +24,7 @@ export function useUserForm({ onSuccess, departments }: UseUserFormProps) {
       college: "",
       gender: "",
       end_date: "",
-      stipend: "",
+      stipend: null,
     },
     enableReinitialize: true,
 
@@ -57,10 +57,12 @@ export function useUserForm({ onSuccess, departments }: UseUserFormProps) {
         then: (schema) => schema.required("College is required for interns"),
       }),
 
-      stipend: Yup.number().when("role", {
-        is: "intern",
-        then: (schema) => schema.required("Stipend is required for interns").min(0, "Stipend must be positive"),
-      }),
+      stipend: Yup.number()
+        .nullable()
+        .when("role", {
+          is: "intern",
+          then: (schema) => schema.required("Stipend is required for interns").min(0, "Stipend must be positive"),
+        }),
 
       end_date: Yup.string().when("role", {
         is: "intern",
@@ -90,10 +92,10 @@ export function useUserForm({ onSuccess, departments }: UseUserFormProps) {
 
         // Role-specific fields
         if (values.role === "intern") {
-          payload.college = values.college;
-          payload.gender = values.gender;
-          payload.end_date = values.end_date;
-          payload.stipend = values.stipend;
+          payload.college = values.college || null;
+          payload.gender = values.gender || null;
+          payload.end_date = values.end_date || null;
+          payload.stipend = values.stipend ? parseInt(values.stipend.toString(), 10) : null;
           payload.department_id = values.department_id;
         } else if (values.role === "manager") {
           payload.department_id = values.department_id;
@@ -140,7 +142,7 @@ export function useUserForm({ onSuccess, departments }: UseUserFormProps) {
       college: user.intern?.college || "",
       gender: user.intern?.gender || "",
       end_date: user.intern?.end_date || "",
-      stipend: user.intern?.stipend || "",
+      stipend: user.intern?.stipend || null,
     });
   };
 
@@ -156,7 +158,7 @@ export function useUserForm({ onSuccess, departments }: UseUserFormProps) {
         college: "",
         gender: "",
         end_date: "",
-        stipend: "",
+        stipend: null,
       },
     });
   };
