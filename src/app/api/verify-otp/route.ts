@@ -3,10 +3,13 @@ import { gql } from "@apollo/client";
 import client from "@/lib/apolloClient";
 
 const VERIFY_OTP = gql`
-  query VerifyOTP($email: String!, $otp: String!) {
-    users(where: { email: { _eq: $email }, otp: { _eq: $otp } }) {
+  query VerifyOTP($email: String!, $otp: String!, $now: timestamp!) {
+    users(where: { 
+      email: { _eq: $email }, 
+      otp: { _eq: $otp },
+      otp_expiry: { _gt: $now } 
+    }) {
       id
-      otp_expiry
     }
   }
 `;
@@ -21,20 +24,16 @@ export async function POST(req: Request) {
 
     const { data } = await client.query<{ users: any[] }>({
       query: VERIFY_OTP,
-      variables: { email, otp },
+      variables: { 
+        email, 
+        otp, 
+        now: new Date().toISOString() 
+      },
       fetchPolicy: "network-only",
     });
 
     if (!data?.users || data.users.length === 0) {
-      return NextResponse.json({ error: "Invalid OTP" }, { status: 400 });
-    }
-
-    const user = data.users[0];
-    const now = new Date();
-    const expiry = new Date(user.otp_expiry);
-
-    if (now > expiry) {
-      return NextResponse.json({ error: "OTP has expired" }, { status: 400 });
+      return NextResponse.json({ error: "Invalid or expired OTP" }, { status: 400 });
     }
 
     return NextResponse.json({ message: "OTP verified successfully" });

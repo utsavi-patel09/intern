@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { gql } from "@apollo/client";
 import client from "@/lib/apolloClient";
-import nodemailer from "nodemailer";
+import { sendEmail, getOtpTemplate } from "@/lib/mailer";
 
 const CHECK_USER = gql`
   query CheckUser($email: String!) {
@@ -42,7 +42,8 @@ export async function POST(req: Request) {
 
     // 2. Generate 6-digit OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    const expiry = new Date(Date.now() + 10 * 60 * 1000).toISOString(); // 10 minutes
+    // 10 minutes from now
+    const expiry = new Date(Date.now() + 10 * 60 * 1000).toISOString(); 
 
     // 3. Save OTP to DB
     await client.mutate({
@@ -50,40 +51,21 @@ export async function POST(req: Request) {
       variables: { email, otp, expiry },
     });
 
-    // 4. Send email
-    const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST || "smtp.gmail.com",
-      port: Number(process.env.SMTP_PORT) || 587,
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
-      },
+    // 4. Send email using centralized utility
+    const result = await sendEmail({
+      to: email,
+      subject: "Reset Your InternHub Password",
+      text: `Your OTP for password reset is: ${otp}. It will expire in 10 minutes.`,
+      html: getOtpTemplate(otp),
     });
 
-    const mailOptions = {
-      from: `"InternHub Support" <${process.env.SMTP_USER}>`,
-      to: email,
-      subject: "Your Password Reset OTP",
-      text: `Your OTP for password reset is: ${otp}. It will expire in 10 minutes.`,
-      html: `
-        <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px;">
-          <h2 style="color: #1E3A5F; text-align: center;">InternHub Password Reset</h2>
-          <p>We received a request to reset your password. Here is your One-Time Password (OTP):</p>
-          <div style="background-color: #f4f7f6; padding: 15px; text-align: center; font-size: 24px; font-weight: bold; letter-spacing: 5px; color: #0EA5E9; border-radius: 8px; margin: 20px 0;">
-            ${otp}
-          </div>
-          <p style="color: #666; font-size: 14px;">This OTP is valid for <strong>10 minutes</strong>. If you didn't request a password reset, please ignore this email.</p>
-          <hr style="border: 0; border-top: 1px solid #eee; margin: 30px 0;" />
-          <p style="color: #999; font-size: 12px; text-align: center;">InternHub &copy; ${new Date().getFullYear()}</p>
-        </div>
-      `,
-    };
-
-    await transporter.sendMail(mailOptions);
+    if (!result.success) {
+      throw new Error("Failed to send email");
+    }
 
     return NextResponse.json({ message: "OTP sent successfully" });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Forgot Password error:", error);
-    return NextResponse.json({ error: "Failed to process request" }, { status: 500 });
+    return NextResponse.json({ error: error.message || "Failed to process request" }, { status: 500 });
   }
 }
