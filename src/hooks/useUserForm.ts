@@ -23,6 +23,7 @@ export function useUserForm({ onSuccess, departments }: UseUserFormProps) {
       department_id: null,
       college: "",
       gender: "",
+      start_date: "",
       end_date: "",
       stipend: null,
     },
@@ -64,6 +65,8 @@ export function useUserForm({ onSuccess, departments }: UseUserFormProps) {
           then: (schema) => schema.required("Stipend is required for interns").min(0, "Stipend must be positive"),
         }),
 
+      start_date: Yup.string(),
+
       end_date: Yup.string().when("role", {
         is: "intern",
         then: (schema) => schema.required("End date is required for interns"),
@@ -94,6 +97,7 @@ export function useUserForm({ onSuccess, departments }: UseUserFormProps) {
         if (values.role === "intern") {
           payload.college = values.college || null;
           payload.gender = values.gender || null;
+          payload.start_date = values.start_date || null;
           payload.end_date = values.end_date || null;
           payload.stipend = values.stipend ? parseInt(values.stipend.toString(), 10) : null;
           payload.department_id = values.department_id;
@@ -141,6 +145,7 @@ export function useUserForm({ onSuccess, departments }: UseUserFormProps) {
       department_id: user.department_id ?? null,
       college: user.intern?.college || "",
       gender: user.intern?.gender || "",
+      start_date: user.intern?.start_date || "",
       end_date: user.intern?.end_date || "",
       stipend: user.intern?.stipend || null,
     });
@@ -157,6 +162,7 @@ export function useUserForm({ onSuccess, departments }: UseUserFormProps) {
         department_id: null,
         college: "",
         gender: "",
+        start_date: "",
         end_date: "",
         stipend: null,
       },

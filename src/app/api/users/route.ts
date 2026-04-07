@@ -23,6 +23,7 @@ const GET_USERS = gql`
       intern {
         college
         gender
+        start_date
         end_date
         stipend
         department {
@@ -89,6 +90,7 @@ const UPDATE_INTERN = gql`
     $college: String, 
     $department_id: Int, 
     $gender: String, 
+    $start_date: date,
     $end_date: date, 
     $stipend: Int
   ) {
@@ -98,6 +100,7 @@ const UPDATE_INTERN = gql`
         college: $college, 
         department_id: $department_id, 
         gender: $gender, 
+        start_date: $start_date,
         end_date: $end_date, 
         stipend: $stipend 
       }
@@ -155,6 +158,7 @@ export async function GET(req: Request) {
     const limit = parseInt(url.searchParams.get("limit") || "10", 10);
     const search = url.searchParams.get("search") || "";
     const activeRole = url.searchParams.get("role") || "all";
+    const departmentId = url.searchParams.get("department") ? parseInt(url.searchParams.get("department")!, 10) : null;
 
     const offset = (page - 1) * limit;
 
@@ -192,7 +196,7 @@ export async function GET(req: Request) {
       managersMap.set(m.user_id, m.department?.id || null);
     });
 
-    const mappedUsers = data?.users?.map((u: any) => {
+    let mappedUsers = data?.users?.map((u: any) => {
       let deptId = null;
       if (u.role === 'intern') {
         deptId = u.intern?.department?.id || null;
@@ -205,9 +209,14 @@ export async function GET(req: Request) {
       };
     });
 
+    // Filter by department if specified
+    if (departmentId) {
+      mappedUsers = mappedUsers?.filter((u: any) => u.department_id === departmentId);
+    }
+
     return NextResponse.json({ 
       users: mappedUsers ?? [],
-      totalCount,
+      totalCount: departmentId ? mappedUsers?.length : totalCount,
       page,
       limit
     });
@@ -227,7 +236,7 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { 
       name, email, password, role, 
-      college, department_id, gender, end_date, stipend 
+      college, department_id, gender, start_date, end_date, stipend 
     } = body;
 
     // 1. Check if email exists
@@ -265,10 +274,10 @@ export async function POST(req: Request) {
             college: college || "Not Specified",
             department_id: department_id || null,
             gender: gender || null,
+            start_date: start_date || new Date().toISOString().split('T')[0],
             end_date: end_date || null,
             stipend: stipend ? parseInt(stipend.toString(), 10) : null,
             phone_number: "Not Assigned",
-            start_date: new Date().toISOString().split('T')[0]
           }
         }
       });
@@ -315,7 +324,7 @@ export async function PUT(req: Request) {
     const body = await req.json();
     const { 
       id, name, email, password, role, 
-      college, department_id, gender, end_date, stipend 
+      college, department_id, gender, start_date, end_date, stipend 
     } = body;
 
     // 1. Get current state
@@ -379,10 +388,10 @@ export async function PUT(req: Request) {
               college: college || "Not Specified",
               department_id: department_id || null,
               gender: gender || null,
+              start_date: start_date || new Date().toISOString().split('T')[0],
               end_date: end_date || null,
               stipend: stipend ? parseInt(stipend.toString(), 10) : null,
               phone_number: "Not Assigned",
-              start_date: new Date().toISOString().split('T')[0]
             }
           }
         });
@@ -407,6 +416,7 @@ export async function PUT(req: Request) {
             college,
             department_id,
             gender,
+            start_date: start_date || null,
             end_date: end_date || null,
             stipend: stipend ? parseInt(stipend.toString(), 10) : null
           }

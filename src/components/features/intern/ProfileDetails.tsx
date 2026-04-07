@@ -59,14 +59,25 @@ export function ProfileDetails({ intern, editing, setEditing, formik, loading }:
             <div className="flex flex-col gap-1.5">
               <input
                 name="phone_number"
+                type="tel"
+                inputMode="numeric"
+                pattern="[0-9]{10}"
+                maxLength={10}
                 value={formik.values.phone_number}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 className={`form-input bg-white/80 ${formik.touched.phone_number && formik.errors.phone_number ? 'border-red-300 ring-red-100' : ''}`}
-                placeholder="+1 (555) 000-0000"
+                placeholder="Enter 10 digit number"
               />
-              {formik.touched.phone_number && formik.errors.phone_number && (
-                <p className="text-red-500 text-xs font-bold">{formik.errors.phone_number}</p>
+              {formik.touched.phone_number && (
+                <>
+                  {formik.errors.phone_number && (
+                    <p className="text-red-500 text-xs font-bold">{formik.errors.phone_number}</p>
+                  )}
+                  {!/^[0-9]{10}$/.test(formik.values.phone_number) && !formik.errors.phone_number && (
+                    <p className="text-amber-600 text-xs font-semibold">Phone number must be exactly 10 digits</p>
+                  )}
+                </>
               )}
             </div>
           ) : (

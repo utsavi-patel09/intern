@@ -9,7 +9,8 @@ export function useAdminUsers() {
   
   // Filtering states
   const [search, setSearch] = useState("");
-  const [activeRole, setActiveRole] = useState<string>("all");
+  const [activeRole, setActiveRole] = useState<string>("manager");
+  const [filterDepartment, setFilterDepartment] = useState<number | "">("");
 
   // Pagination states
   const [page, setPage] = useState(1);
@@ -26,6 +27,10 @@ export function useAdminUsers() {
         role: activeRole,
       });
 
+      if (filterDepartment) {
+        params.append("department", filterDepartment.toString());
+      }
+
       const res = await fetch(`/api/users?${params.toString()}`);
       const data = await res.json();
       setUsers(data?.users || []);
@@ -35,7 +40,7 @@ export function useAdminUsers() {
     } finally {
       setLoading(false);
     }
-  }, [page, pageSize, search, activeRole]);
+  }, [page, pageSize, search, activeRole, filterDepartment]);
 
   const handleDeleteUser = async (id: number) => {
     if (!confirm("Are you sure you want to delete this user?")) return;
@@ -62,7 +67,7 @@ export function useAdminUsers() {
   // When filters change, reset to page 1
   useEffect(() => {
     setPage(1);
-  }, [search, activeRole]);
+  }, [search, activeRole, filterDepartment]);
 
   return {
     users, // filtered implicitly by backend
@@ -73,6 +78,8 @@ export function useAdminUsers() {
     setSearch,
     activeRole,
     setActiveRole,
+    filterDepartment,
+    setFilterDepartment,
     page,
     setPage,
     pageSize,

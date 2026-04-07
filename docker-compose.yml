@@ -52,7 +52,7 @@ services:
     container_name: superset
     environment:
       SUPERSET_CONFIG_PATH: /app/pythonpath/superset_config.py
-      SUPERSET_ENV: development
+      SUPERSET_ENV: development`
       SUPERSET_LOAD_EXAMPLES: "no"
       SUPERSET_SECRET_KEY: "supersecretkey"
       # Connect Superset to Postgres for metadata

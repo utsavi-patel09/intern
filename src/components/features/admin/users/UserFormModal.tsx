@@ -192,19 +192,36 @@ export function UserFormModal({
                   </div>
                 </div>
 
-                <div className="flex flex-col gap-1.5 pt-2">
-                  <label className="form-label">End Date <span className="text-red-500">*</span></label>
-                  <input
-                    name="end_date"
-                    type="date"
-                    value={formik.values.end_date ?? ""}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    className={`form-input bg-white/80 focus:bg-white ${formik.touched.end_date && formik.errors.end_date ? 'border-red-300 ring-red-100' : ''}`}
-                  />
-                  {formik.touched.end_date && formik.errors.end_date && (
-                    <p className="text-red-500 text-xs font-bold mt-1">{formik.errors.end_date}</p>
-                  )}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <div className="flex flex-col gap-1.5">
+                    <label className="form-label">Start Date</label>
+                    <input
+                      name="start_date"
+                      type="date"
+                      value={formik.values.start_date ?? ""}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      className={`form-input bg-white/80 focus:bg-white ${formik.touched.start_date && formik.errors.start_date ? 'border-red-300 ring-red-100' : ''}`}
+                    />
+                    {formik.touched.start_date && formik.errors.start_date && (
+                      <p className="text-red-500 text-xs font-bold mt-1">{formik.errors.start_date}</p>
+                    )}
+                  </div>
+
+                  <div className="flex flex-col gap-1.5">
+                    <label className="form-label">End Date <span className="text-red-500">*</span></label>
+                    <input
+                      name="end_date"
+                      type="date"
+                      value={formik.values.end_date ?? ""}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      className={`form-input bg-white/80 focus:bg-white ${formik.touched.end_date && formik.errors.end_date ? 'border-red-300 ring-red-100' : ''}`}
+                    />
+                    {formik.touched.end_date && formik.errors.end_date && (
+                      <p className="text-red-500 text-xs font-bold mt-1">{formik.errors.end_date}</p>
+                    )}
+                  </div>
                 </div>
               </div>
             )}

@@ -8,6 +8,7 @@ export interface User {
   intern?: {
     college: string;
     gender?: string | null;
+    start_date?: string | null;
     end_date?: string | null;
     stipend?: number | null;
   };
@@ -54,6 +55,7 @@ export interface UserFormData {
   department_id: number | null;
   college: string;
   gender?: string | null;
+  start_date?: string | null;
   end_date?: string | null;
   stipend?: number | string | null;
 }
