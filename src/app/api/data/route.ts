@@ -10,7 +10,6 @@ const GET_USER_WITH_INTERN = gql`
       name
       email
       role
-      department_id
       created_at
       intern {
         id
@@ -18,6 +17,10 @@ const GET_USER_WITH_INTERN = gql`
         college
         phone_number
         start_date
+        gender
+        end_date
+        stipend
+        department_id
       }
     }
   }
@@ -29,7 +32,6 @@ interface QueryResponse {
     name: string;
     email: string;
     role: string;
-    department_id: number | null;
     created_at: string | null;
     intern?: {
       id: number;
@@ -37,14 +39,15 @@ interface QueryResponse {
       college: string | null;
       phone_number: string | null;
       start_date: string | null;
+      gender: string | null;
+      end_date: string | null;
+      stipend: number | null;
+      department_id: number | null;
     } | null;
   } | null;
 }
 
-
-
 export async function GET(req: Request) {
-  // ── Auth: any authenticated user ──
   const { errorResponse } = await requireAuth();
   if (errorResponse) return errorResponse;
 
@@ -53,10 +56,7 @@ export async function GET(req: Request) {
     const userId = parseInt(searchParams.get("userId") || "", 10);
 
     if (isNaN(userId)) {
-      return NextResponse.json(
-        { error: "Invalid user ID" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Invalid user ID" }, { status: 400 });
     }
 
     const res = await client.query<QueryResponse>({
@@ -66,12 +66,8 @@ export async function GET(req: Request) {
     });
 
     const user = res.data?.users_by_pk;
-
     if (!user) {
-      return NextResponse.json(
-        { error: "User not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
     const intern = user.intern;
@@ -81,7 +77,7 @@ export async function GET(req: Request) {
       name: user.name,
       email: user.email,
       role: user.role,
-      department_id: user.department_id,
+      department_id: intern?.department_id ?? null,
       created_at: user.created_at,
 
       intern_id: intern?.id ?? null,
@@ -89,14 +85,14 @@ export async function GET(req: Request) {
       college: intern?.college ?? null,
       phone_number: intern?.phone_number ?? null,
       start_date: intern?.start_date ?? null,
+      gender: intern?.gender ?? null,
+      end_date: intern?.end_date ?? null,
+      stipend: intern?.stipend ?? null,
     };
 
     return NextResponse.json(combined);
   } catch (err) {
     console.error(err);
-    return NextResponse.json(
-      { error: "Failed to fetch data" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to fetch data" }, { status: 500 });
   }
 }

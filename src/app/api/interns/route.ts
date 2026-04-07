@@ -13,12 +13,15 @@ const GET_INTERNS = gql`
       college
       phone_number
       start_date
+      gender
+      end_date
+      stipend
+      department_id
       user {          # matches Hasura relationship
         id
         name
         email
         role
-        department_id
         created_at
       }
     }
@@ -30,20 +33,29 @@ const GET_INTERNS = gql`
 const UPDATE_INTERN_BY_USER_ID = gql`
   mutation UpdateInternByUserId(
     $user_id: Int!, 
-    $college: String, 
-    $phone_number: String, 
-    $start_date: date
+    $phone_number: String,
+    $college: String,
+    $gender: String,
+    $end_date: date,
+    $stipend: Int
   ) {
     update_interns(
       where: { user_id: { _eq: $user_id } }, 
-      _set: { college: $college, phone_number: $phone_number, start_date: $start_date }
+      _set: { 
+        phone_number: $phone_number,
+        college: $college,
+        gender: $gender,
+        end_date: $end_date,
+        stipend: $stipend
+      }
     ) {
       returning {
         id
         user_id
-        college
         phone_number
-        start_date
+        gender
+        end_date
+        stipend
       }
     }
   }
@@ -56,7 +68,6 @@ interface User {
   name: string;
   email: string;
   role: string;
-  department_id: number | null;
   created_at: string | null;
 }
 
@@ -66,9 +77,12 @@ interface Intern {
   college: string;
   phone_number: string;
   start_date: string;
+  gender?: string | null;
+  end_date?: string | null;
+  stipend?: number | null;
+  department_id: number | null;
   user: User;   // match relationship name
 }
-
 
 interface UpdateInternResponse {
   update_interns: {
@@ -76,12 +90,9 @@ interface UpdateInternResponse {
   };
 }
 
-
-
 // ==================== API Handler ====================
 
 export async function GET() {
-  // ── Auth: admin only ──
   const { errorResponse } = await requireAuth(["admin"]);
   if (errorResponse) return errorResponse;
 
@@ -93,45 +104,49 @@ export async function GET() {
 
     const interns = res.data?.interns || [];
 
-    // Combine intern + user fields into a single object
     const combined = interns.map((i) => ({
       id: i.user?.id,
       name: i.user?.name,
       email: i.user?.email,
       role: i.user?.role,
-      department_id: i.user?.department_id,
+      department_id: i.department_id,
       created_at: i.user?.created_at,
       user_id: i.user_id,
       college: i.college,
       phone_number: i.phone_number,
       start_date: i.start_date,
+      gender: i.gender,
+      end_date: i.end_date,
+      stipend: i.stipend,
     }));
 
     return NextResponse.json(combined);
   } catch (err) {
     console.error("GET /interns error:", err);
-    return NextResponse.json(
-      [], // Return empty array on error to prevent frontend crash
-      { status: 500 }
-    );
+    return NextResponse.json([], { status: 500 });
   }
 }
 
-
 export async function PUT(req: Request) {
-  // ── Auth: any authenticated user ──
   const { errorResponse } = await requireAuth();
   if (errorResponse) return errorResponse;
 
   try {
-    const { user_id, college, phone_number, start_date } = await req.json();
+    const body = await req.json();
+    const { user_id, phone_number, college, gender, end_date, stipend } = body;
 
     const res = await client.mutate<UpdateInternResponse>({
       mutation: UPDATE_INTERN_BY_USER_ID,
-      variables: { user_id, college, phone_number, start_date }, // match GraphQL mutation
+      variables: { 
+        user_id, 
+        phone_number, 
+        college, 
+        gender, 
+        end_date: end_date || null, 
+        stipend: stipend ? parseInt(stipend.toString(), 10) : null 
+      },
     });
 
-  
     return NextResponse.json(res.data?.update_interns?.returning[0]);
   } catch (err) {
     console.error("PUT /interns error:", err);

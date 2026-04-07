@@ -10,6 +10,12 @@ export default function DepartmentManager() {
   const { departments, loading: depsLoading, refreshDepartments } = useDepartments();
   const [editingDeptId, setEditingDeptId] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
+  const [flash, setFlash] = useState<{ message: string; type: "error" | "success" } | null>(null);
+
+  const showFlash = (message: string, type: "error" | "success") => {
+    setFlash({ message, type });
+    setTimeout(() => setFlash(null), 4000);
+  };
 
   const formik = useFormik({
     initialValues: { name: "" },
@@ -26,6 +32,11 @@ export default function DepartmentManager() {
             body: JSON.stringify({ id: editingDeptId, name: values.name }),
           });
           const data = await res.json();
+          if (!res.ok) {
+            showFlash(data.error || "Failed to update department", "error");
+            setLoading(false);
+            return;
+          }
           await refreshDepartments();
           setEditingDeptId(null);
         } else {
@@ -35,12 +46,18 @@ export default function DepartmentManager() {
             body: JSON.stringify({ name: values.name }),
           });
           const data = await res.json();
+          if (!res.ok) {
+            showFlash(data.error || "Failed to add department", "error");
+            setLoading(false);
+            return;
+          }
           await refreshDepartments();
         }
         formik.resetForm();
-      } catch (err) {
-        console.error(err);
-        alert("Operation failed");
+        showFlash(`Department ${editingDeptId ? "updated" : "added"} successfully!`, "success");
+      } catch (err: any) {
+        console.error("Submission error:", err);
+        showFlash("Network or server error occurred", "error");
       } finally {
         setLoading(false);
       }
@@ -67,8 +84,10 @@ export default function DepartmentManager() {
       });
 
       await refreshDepartments();
-    } catch (err) {
+      showFlash("Department deleted successfully!", "success");
+    } catch (err: any) {
       console.error(err);
+      showFlash(err.message || "Failed to delete department", "error");
     }
   };
 
@@ -94,6 +113,23 @@ export default function DepartmentManager() {
         </div>
       </div>
 
+      {flash && (
+        <div className={`mb-6 p-4 rounded-2xl flex items-center gap-3 backdrop-blur-sm animate-in fade-in slide-in-from-top-4 duration-300 shadow-sm border ${
+          flash.type === "error" ? "bg-red-50/80 border-red-200 text-red-700" : "bg-emerald-50/80 border-emerald-200 text-emerald-700"
+        }`}>
+          {flash.type === "error" ? (
+            <svg className="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          ) : (
+            <svg className="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          )}
+          <p className="font-semibold text-sm">{flash.message}</p>
+        </div>
+      )}
+
       {/* FORM CARD */}
       <div className="card-glass bg-white/60 p-6 mb-10">
         <h2 className="section-title mb-5 flex items-center gap-2">
@@ -107,7 +143,7 @@ export default function DepartmentManager() {
 
         <form onSubmit={formik.handleSubmit} className="flex flex-col md:flex-row gap-4 items-start">
           <div className="flex-1 w-full">
-            <label className="form-label">Department Name</label>
+            <label className="form-label">Department Name <span className="text-red-500">*</span></label>
             <input
               name="name"
               type="text"

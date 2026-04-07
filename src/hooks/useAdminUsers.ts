@@ -6,21 +6,36 @@ export function useAdminUsers() {
   const [users, setUsers] = useState<User[]>([]);
   const { departments, loading: depsLoading } = useDepartments();
   const [loading, setLoading] = useState(true);
+  
+  // Filtering states
   const [search, setSearch] = useState("");
-  const [activeRole, setActiveRole] = useState<string>("manager");
+  const [activeRole, setActiveRole] = useState<string>("all");
+
+  // Pagination states
+  const [page, setPage] = useState(1);
+  const [pageSize] = useState(10);
+  const [totalCount, setTotalCount] = useState(0);
 
   const fetchUsers = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch("/api/users");
+      const params = new URLSearchParams({
+        page: page.toString(),
+        limit: pageSize.toString(),
+        search,
+        role: activeRole,
+      });
+
+      const res = await fetch(`/api/users?${params.toString()}`);
       const data = await res.json();
       setUsers(data?.users || []);
+      setTotalCount(data?.totalCount || 0);
     } catch (err) {
       console.error("Fetch users error:", err);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [page, pageSize, search, activeRole]);
 
   const handleDeleteUser = async (id: number) => {
     if (!confirm("Are you sure you want to delete this user?")) return;
@@ -31,7 +46,9 @@ export function useAdminUsers() {
         body: JSON.stringify({ id }),
       });
       if (!res.ok) throw new Error("Delete failed");
-      setUsers((prev) => prev.filter((u) => u.id !== id));
+      
+      // Instead of manual removal, we should refresh to keep pagination counts accurate
+      fetchUsers();
     } catch (err) {
       console.error("Delete user error:", err);
       alert("Failed to delete user");
@@ -42,25 +59,24 @@ export function useAdminUsers() {
     fetchUsers();
   }, [fetchUsers]);
 
-  const filteredUsers = users.filter((u) => {
-    if (!u) return false;
-    if (u.role === 'admin') return false;
-    if (activeRole !== 'all' && u.role !== activeRole) return false;
-    
-    const name = u.name?.toLowerCase() || "";
-    const email = u.email?.toLowerCase() || "";
-    return name.includes(search.toLowerCase()) || email.includes(search.toLowerCase());
-  });
+  // When filters change, reset to page 1
+  useEffect(() => {
+    setPage(1);
+  }, [search, activeRole]);
 
   return {
-    users,
+    users, // filtered implicitly by backend
+    filteredUsers: users, // maintained for backward compatibility with components
     departments,
     loading: loading || depsLoading,
     search,
     setSearch,
     activeRole,
     setActiveRole,
-    filteredUsers,
+    page,
+    setPage,
+    pageSize,
+    totalCount,
     refreshUsers: fetchUsers,
     handleDeleteUser,
   };

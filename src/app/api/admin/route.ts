@@ -8,7 +8,6 @@ export async function GET() {
     const email = "admin@example.com";
     const plainPassword = "Admin@123"; // change this
     const role = "admin";
-    const department_id = 1;
 
     try {
         // Hash password
@@ -19,15 +18,13 @@ export async function GET() {
         $name: String!,
         $email: String!,
         $password: String!,
-        $role: String!,
-        $department_id: Int
+        $role: String!
       ) {
         insert_users_one(object: {
           name: $name,
           email: $email,
           password: $password,
-          role: $role,
-          department_id: $department_id
+          role: $role
         }) {
           id
           name
@@ -43,7 +40,6 @@ export async function GET() {
                 email,
                 password: hashedPassword,
                 role,
-                department_id,
             },
         });
 

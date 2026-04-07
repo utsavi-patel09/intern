@@ -46,23 +46,7 @@ export function ProfileDetails({ intern, editing, setEditing, formik, loading }:
             <svg className="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
             College / University
           </label>
-          {editing ? (
-            <div className="flex flex-col gap-1.5">
-              <input
-                name="college"
-                value={formik.values.college}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                className={`form-input bg-white/80 ${formik.touched.college && formik.errors.college ? 'border-red-300 ring-red-100' : ''}`}
-                placeholder="Enter your college"
-              />
-              {formik.touched.college && formik.errors.college && (
-                <p className="text-red-500 text-xs font-bold">{formik.errors.college}</p>
-              )}
-            </div>
-          ) : (
-            <p className="text-lg font-semibold text-slate-800">{intern.college || "Not specified"}</p>
-          )}
+          <p className="text-lg font-semibold text-slate-800">{intern.college || "Not specified"}</p>
         </div>
 
         {/* Phone */}
@@ -90,32 +74,56 @@ export function ProfileDetails({ intern, editing, setEditing, formik, loading }:
           )}
         </div>
 
+        {/* Gender */}
+        <div className="flex flex-col gap-2">
+          <label className="text-sm font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+            <svg className="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+            Gender
+          </label>
+          {editing ? (
+            <select
+              name="gender"
+              value={formik.values.gender}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              className={`form-select bg-white/80 ${formik.touched.gender && formik.errors.gender ? 'border-red-300 ring-red-100' : ''}`}
+            >
+              <option value="">Select Gender</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+          ) : (
+            <p className="text-lg font-semibold text-slate-800">{intern.gender || "Not specified"}</p>
+          )}
+        </div>
+
         {/* Start Date */}
         <div className="flex flex-col gap-2">
           <label className="text-sm font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
             <svg className="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
             Start Date
           </label>
-          {editing ? (
-            <div className="flex flex-col gap-1.5">
-              <input
-                type="date"
-                name="start_date"
-                value={formik.values.start_date}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                className={`form-input bg-white/80 ${formik.touched.start_date && formik.errors.start_date ? 'border-red-300 ring-red-100' : ''}`}
-              />
-              {formik.touched.start_date && formik.errors.start_date && (
-                <p className="text-red-500 text-xs font-bold">{formik.errors.start_date}</p>
-              )}
-            </div>
-          ) : (
-            <p className="text-lg font-semibold text-slate-800">{intern.start_date ? new Date(intern.start_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : "Not specified"}</p>
-          )}
+          <p className="text-lg font-semibold text-slate-800">{intern.start_date ? new Date(intern.start_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : "Not specified"}</p>
         </div>
 
+        {/* End Date */}
+        <div className="flex flex-col gap-2">
+          <label className="text-sm font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+            <svg className="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+            End Date
+          </label>
+          <p className="text-lg font-semibold text-slate-800">{intern.end_date ? new Date(intern.end_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : "Not specified"}</p>
+        </div>
 
+        {/* Stipend */}
+        <div className="flex flex-col gap-2">
+          <label className="text-sm font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+            <svg className="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            Stipend (₹)
+          </label>
+          <p className="text-lg font-semibold text-slate-800">{intern.stipend ? `₹${intern.stipend}` : "Not specified"}</p>
+        </div>
       </div>
     </div>
   );

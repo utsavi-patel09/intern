@@ -136,7 +136,7 @@ export default function AdminDashboard() {
               <thead>
                 <tr>
                   <th className="table-th w-2/3 bg-slate-50/50">Department</th>
-                  <th className="table-th text-right bg-slate-50/50">Headcount</th>
+                  <th className="table-th text-right bg-slate-50/50">TotalUser</th>
                 </tr>
               </thead>
 

@@ -14,10 +14,14 @@ export function usePasswordForm({ userId, onSuccess }: UsePasswordFormProps) {
     initialValues: {
       current_password: "",
       new_password: "",
+      confirm_password: "",
     },
     validationSchema: Yup.object({
       current_password: Yup.string().required("Required"),
       new_password: Yup.string().min(6, "Password must be at least 6 characters").required("Required"),
+      confirm_password: Yup.string()
+        .oneOf([Yup.ref('new_password')], 'Passwords must match')
+        .required('Required'),
     }),
     onSubmit: async (values) => {
       if (!userId) return;

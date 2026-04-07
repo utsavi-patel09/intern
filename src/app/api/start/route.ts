@@ -47,7 +47,7 @@ export async function GET() {
           }
         }
 
-        interns: users(where: { role: { _eq: "intern" } }) {
+        interns {
           department_id
         }
 

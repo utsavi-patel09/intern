@@ -12,6 +12,14 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
+  // Forgot Password States
+  const [showForgotModal, setShowForgotModal] = useState(false);
+  const [forgotStep, setForgotStep] = useState<1 | 2 | 3>(1); // 1 = Email, 2 = OTP, 3 = New Pass
+  const [resetEmail, setResetEmail] = useState("");
+  const [resetOtp, setResetOtp] = useState("");
+  const [forgotError, setForgotError] = useState<string | null>(null);
+  const [forgotLoading, setForgotLoading] = useState(false);
+
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -43,6 +51,78 @@ export default function LoginPage() {
       }
     },
   });
+
+  // Forgot Password API Calls
+  const handleSendOtp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setForgotError(null);
+    setForgotLoading(true);
+    try {
+      const res = await fetch("/api/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: resetEmail })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      setForgotStep(2);
+    } catch (err: any) {
+      setForgotError(err.message || "Failed to send OTP");
+    }
+    setForgotLoading(false);
+  };
+
+  const handleVerifyOtp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setForgotError(null);
+    setForgotLoading(true);
+    try {
+      const res = await fetch("/api/verify-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: resetEmail, otp: resetOtp })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      setForgotStep(3);
+    } catch (err: any) {
+      setForgotError(err.message || "Invalid or expired OTP");
+    }
+    setForgotLoading(false);
+  };
+
+  const handleResetPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const newPassword = (e.target as any).newPassword.value;
+    const confirmPassword = (e.target as any).confirmPassword.value;
+    
+    if (newPassword !== confirmPassword) {
+      setForgotError("Passwords do not match");
+      return;
+    }
+
+    setForgotError(null);
+    setForgotLoading(true);
+    try {
+      const res = await fetch("/api/reset-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: resetEmail, otp: resetOtp, newPassword })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      
+      // Success!
+      setShowForgotModal(false);
+      setForgotStep(1);
+      formik.setFieldValue("email", resetEmail);
+      alert("Password reset successfully. Please sign in with your new password.");
+    } catch (err: any) {
+      setForgotError(err.message || "Failed to reset password");
+    }
+    setForgotLoading(false);
+  };
+
 
   return (
     <div className="flex-1 w-full flex items-center justify-center p-4 sm:p-8 relative overflow-hidden z-10">
@@ -82,7 +162,7 @@ export default function LoginPage() {
 
         <form onSubmit={formik.handleSubmit} className="space-y-5">
           <div className="group">
-            <label className="text-sm font-bold text-slate-600 uppercase tracking-wider mb-2 block group-focus-within:text-[#1E3A5F] transition-colors">Email Address</label>
+            <label className="text-sm font-bold text-slate-600 uppercase tracking-wider mb-2 block group-focus-within:text-[#1E3A5F] transition-colors">Email Address <span className="text-red-500">*</span></label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-[#0EA5E9] transition-colors">
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -106,7 +186,19 @@ export default function LoginPage() {
 
           <div className="group">
             <div className="flex justify-between items-center mb-2">
-              <label className="text-sm font-bold text-slate-600 uppercase tracking-wider group-focus-within:text-[#1E3A5F] transition-colors">Password</label>
+              <label className="text-sm font-bold text-slate-600 uppercase tracking-wider group-focus-within:text-[#1E3A5F] transition-colors">Password <span className="text-red-500">*</span></label>
+              <button 
+                type="button" 
+                onClick={() => {
+                  setForgotError(null);
+                  setForgotStep(1);
+                  setResetEmail(formik.values.email || "");
+                  setShowForgotModal(true);
+                }}
+                className="text-xs font-bold text-sky-600 hover:text-[#1E3A5F] transition-colors"
+               >
+                 Forgot Password?
+               </button>
             </div>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-[#0EA5E9] transition-colors">
@@ -149,6 +241,109 @@ export default function LoginPage() {
         </form>
 
       </div>
+
+      {/* Forgot Password Modal */}
+      {showForgotModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl w-full max-w-md p-6 sm:p-8 shadow-2xl relative">
+            <button 
+              onClick={() => setShowForgotModal(false)}
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition-colors"
+            >
+              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+
+            <h3 className="text-2xl font-black font-heading text-slate-900 mb-2">Reset Password</h3>
+            <p className="text-slate-500 mb-6 text-sm">
+              {forgotStep === 1 && "Enter your email address and we'll send you an OTP."}
+              {forgotStep === 2 && "Enter the 6-digit OTP sent to your email."}
+              {forgotStep === 3 && "Enter your new password."}
+            </p>
+
+            {forgotError && (
+              <div className="mb-4 p-3 rounded-xl bg-red-50 text-red-600 text-sm font-semibold flex items-center gap-2">
+                <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                {forgotError}
+              </div>
+            )}
+
+            {/* STEP 1: EMAIL */}
+            {forgotStep === 1 && (
+              <form onSubmit={handleSendOtp} className="space-y-4">
+                <div>
+                  <label className="text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5 block">Email <span className="text-red-500">*</span></label>
+                  <input
+                    type="email"
+                    required
+                    value={resetEmail}
+                    onChange={(e) => setResetEmail(e.target.value)}
+                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 focus:outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-500/10 transition-all font-medium"
+                    placeholder="name@company.com"
+                  />
+                </div>
+                <button type="submit" disabled={forgotLoading} className="btn-primary w-full py-3.5 text-sm font-bold flex justify-center items-center">
+                  {forgotLoading ? "Sending..." : "Send OTP"}
+                </button>
+              </form>
+            )}
+
+            {/* STEP 2: OTP */}
+            {forgotStep === 2 && (
+              <form onSubmit={handleVerifyOtp} className="space-y-4">
+                <div>
+                  <label className="text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5 block">Enter OTP <span className="text-red-500">*</span></label>
+                  <input
+                    type="text"
+                    required
+                    maxLength={6}
+                    value={resetOtp}
+                    onChange={(e) => setResetOtp(e.target.value)}
+                    className="w-full px-4 py-3 text-center tracking-[0.5em] text-2xl bg-slate-50 border border-slate-200 rounded-xl text-slate-800 focus:outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-500/10 transition-all font-bold"
+                    placeholder="------"
+                  />
+                </div>
+                <button type="submit" disabled={forgotLoading} className="btn-primary w-full py-3.5 text-sm font-bold flex justify-center items-center">
+                  {forgotLoading ? "Verifying..." : "Verify OTP"}
+                </button>
+              </form>
+            )}
+
+            {/* STEP 3: NEW PASSWORD */}
+            {forgotStep === 3 && (
+              <form onSubmit={handleResetPassword} className="space-y-4">
+                <div>
+                  <label className="text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5 block">New Password <span className="text-red-500">*</span></label>
+                  <input
+                    name="newPassword"
+                    type="password"
+                    required
+                    minLength={6}
+                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 focus:outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-500/10 transition-all font-medium"
+                    placeholder="••••••••"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5 block">Confirm Password <span className="text-red-500">*</span></label>
+                  <input
+                    name="confirmPassword"
+                    type="password"
+                    required
+                    minLength={6}
+                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 focus:outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-500/10 transition-all font-medium"
+                    placeholder="••••••••"
+                  />
+                </div>
+                <button type="submit" disabled={forgotLoading} className="btn-primary w-full py-3.5 text-sm font-bold flex justify-center items-center">
+                  {forgotLoading ? "Resetting..." : "Reset Password"}
+                </button>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
