@@ -176,7 +176,7 @@ export function UserFormModal({
                   </div>
 
                   <div className="flex flex-col gap-1.5">
-                    <label className="form-label">Stipend (₹)</label>
+                    <label className="form-label">Stipend (₹) <span className="text-red-500">*</span></label>
                     <input
                       name="stipend"
                       type="number"
@@ -186,11 +186,14 @@ export function UserFormModal({
                       onBlur={formik.handleBlur}
                       className={`form-input bg-white/80 focus:bg-white ${formik.touched.stipend && formik.errors.stipend ? 'border-red-300 ring-red-100' : ''}`}
                     />
+                    {formik.touched.stipend && formik.errors.stipend && (
+                      <p className="text-red-500 text-xs font-bold mt-1">{formik.errors.stipend}</p>
+                    )}
                   </div>
                 </div>
 
                 <div className="flex flex-col gap-1.5 pt-2">
-                  <label className="form-label">End Date</label>
+                  <label className="form-label">End Date <span className="text-red-500">*</span></label>
                   <input
                     name="end_date"
                     type="date"
@@ -199,6 +202,9 @@ export function UserFormModal({
                     onBlur={formik.handleBlur}
                     className={`form-input bg-white/80 focus:bg-white ${formik.touched.end_date && formik.errors.end_date ? 'border-red-300 ring-red-100' : ''}`}
                   />
+                  {formik.touched.end_date && formik.errors.end_date && (
+                    <p className="text-red-500 text-xs font-bold mt-1">{formik.errors.end_date}</p>
+                  )}
                 </div>
               </div>
             )}
