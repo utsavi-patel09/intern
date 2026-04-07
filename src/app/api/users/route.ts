@@ -3,6 +3,7 @@ import client from "@/lib/apolloClient";
 import { gql } from "@apollo/client";
 import { requireAuth } from "@/lib/auth";
 import bcrypt from "bcryptjs";
+import { sendEmail, getWelcomeTemplate } from "@/lib/mailer";
 
 // ---------------------- GraphQL Queries & Mutations ----------------------
 
@@ -281,6 +282,20 @@ export async function POST(req: Request) {
           }
         }
       });
+    }
+
+    // 4. Send Welcome Email
+    try {
+      await sendEmail({
+        to: email,
+        subject: "Welcome to InternHub - Your Account Credentials",
+        text: `Hello ${name}, your account has been created. Email: ${email}, Password: ${password}`,
+        html: getWelcomeTemplate(name, email, password),
+      });
+      console.log(`Welcome email sent to ${email}`);
+    } catch (emailErr) {
+      console.error("Failed to send welcome email:", emailErr);
+      // We don't throw here to ensure the API still returns 200 since the user was created
     }
 
     return NextResponse.json({ user: newUser });
