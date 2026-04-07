@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import bcrypt from "bcryptjs";
 import { User, UserFormData } from "@/types";
 
 interface UseUserFormProps {
@@ -23,6 +22,9 @@ export function useUserForm({ onSuccess, departments }: UseUserFormProps) {
       role: "manager",
       department_id: null,
       college: "",
+      gender: "",
+      end_date: "",
+      stipend: "",
     },
     enableReinitialize: true,
 
@@ -36,16 +38,12 @@ export function useUserForm({ onSuccess, departments }: UseUserFormProps) {
         .required("Required"),
 
       password: Yup.string()
-        .min(6, "Password must be at least 6 characters")
-        .matches(/[a-z]/, "Must contain at least one lowercase letter")
-        .matches(/[A-Z]/, "Must contain at least one uppercase letter")
-        .matches(/[0-9]/, "Must contain at least one number")
-        .matches(/[@$!%*?&]/, "Must contain at least one special character")
         .test(
           "password-required",
-          "Password is required",
+          "Password is required for new users and must be 6+ characters",
           function (value) {
-            if (!editingUserId && !value) return false;
+            if (editingUserId) return true; // not required for edit
+            if (!value || value.length < 6) return false;
             return true;
           }
         ),
@@ -66,70 +64,54 @@ export function useUserForm({ onSuccess, departments }: UseUserFormProps) {
       setEmailError("");
 
       try {
-
-        let hashedPassword: string | undefined = undefined;
-
-        // ✅ Hash only if password entered
-        if (values.password && values.password.trim() !== "") {
-          hashedPassword = await bcrypt.hash(values.password, 10);
-        }
-
         const method = editingUserId ? "PUT" : "POST";
 
         const payload: any = {
+          id: editingUserId,
           name: values.name,
           email: values.email,
           role: values.role,
         };
 
-        // ✅ Add password only if user entered one
-        if (hashedPassword) {
-          payload.password = hashedPassword;
+        // Only send password if it's new or being changed
+        if (values.password && values.password.trim() !== "") {
+          payload.password = values.password;
         }
 
-        // Intern college
+        // Role-specific fields
         if (values.role === "intern") {
           payload.college = values.college;
-        }
-
-        // Department logic
-        if (values.role === "admin") {
-          payload.department_id = null;
-        } else if (values.department_id !== null) {
+          payload.gender = values.gender;
+          payload.end_date = values.end_date;
+          payload.stipend = values.stipend;
           payload.department_id = values.department_id;
-        }
-
-        // Edit case
-        if (editingUserId) {
-          payload.id = editingUserId;
+        } else if (values.role === "manager") {
+          payload.department_id = values.department_id;
         }
 
         const res = await fetch("/api/users", {
           method,
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
         });
 
         const data = await res.json();
 
         if (!res.ok) {
-          if (data?.error?.toLowerCase().includes("email")) {
-            setEmailError(data.error);
+          const errMsg = data.error || "Operation failed";
+          if (errMsg.toLowerCase().includes("email")) {
+            setEmailError(errMsg);
           } else {
-            setApiError(data.error || "Operation failed");
+            setApiError(errMsg);
           }
           return;
         }
 
         onSuccess(data.user, !editingUserId);
-
         formik.resetForm();
-
       } catch (err) {
         console.error(err);
-        setApiError("Something went wrong");
+        setApiError("A network error occurred. Please try again.");
       } finally {
         setCreateLoading(false);
       }
@@ -142,16 +124,18 @@ export function useUserForm({ onSuccess, departments }: UseUserFormProps) {
     formik.setValues({
       name: user.name || "",
       email: user.email || "",
-      password: "", // keep empty for security
+      password: "", // Clear for security, only update if typed
       role: user.role || "manager",
-      department_id: user.department_id,
+      department_id: user.department_id ?? null,
       college: user.intern?.college || "",
+      gender: user.intern?.gender || "",
+      end_date: user.intern?.end_date || "",
+      stipend: user.intern?.stipend || "",
     });
   };
 
   const startCreating = (defaultRole: string) => {
     setEditingUserId(null);
-
     formik.resetForm({
       values: {
         name: "",
@@ -160,6 +144,9 @@ export function useUserForm({ onSuccess, departments }: UseUserFormProps) {
         role: defaultRole === "all" ? "manager" : defaultRole,
         department_id: null,
         college: "",
+        gender: "",
+        end_date: "",
+        stipend: "",
       },
     });
   };

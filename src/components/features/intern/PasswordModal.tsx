@@ -48,6 +48,21 @@ export function PasswordModal({ show, onClose, formik, loading }: PasswordModalP
               <p className="text-red-500 text-xs font-bold mt-1">{formik.errors.new_password}</p>
             )}
           </div>
+          <div>
+            <label className="form-label">Confirm Password</label>
+            <input
+              name="confirm_password"
+              type="password"
+              placeholder="Confirm your new password"
+              value={formik.values.confirm_password}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              className={`form-input bg-slate-50 focus:bg-white ${formik.touched.confirm_password && formik.errors.confirm_password ? 'border-red-300 ring-red-100' : ''}`}
+            />
+            {formik.touched.confirm_password && formik.errors.confirm_password && (
+              <p className="text-red-500 text-xs font-bold mt-1">{formik.errors.confirm_password}</p>
+            )}
+          </div>
 
           <div className="flex justify-end gap-3 mt-4 pt-6 border-t border-slate-100">
             <button

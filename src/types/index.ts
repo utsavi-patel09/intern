@@ -4,16 +4,30 @@ export interface User {
   email: string;
   password?: string;
   role: string;
-  department_id: number | null;
   created_at: string | null;
-   intern?: {
+  intern?: {
     college: string;
+    gender?: string | null;
+    end_date?: string | null;
+    stipend?: number | null;
   };
+  department_id?: number | null;
+  managers?: {
+    department: {
+      id: number;
+    } | null;
+  }[];
 }
 
 export interface Department {
   id: number;
   name: string;
+}
+
+export interface Manager {
+  id: number;
+  user_id: number;
+  department_id: number | null;
 }
 
 export interface Intern {
@@ -27,6 +41,9 @@ export interface Intern {
   college: string;
   phone_number: string;
   start_date: string;
+  gender?: string | null;
+  end_date?: string | null;
+  stipend?: number | null;
 }
 
 export interface UserFormData {
@@ -36,4 +53,7 @@ export interface UserFormData {
   role: string;
   department_id: number | null;
   college: string;
+  gender?: string | null;
+  end_date?: string | null;
+  stipend?: number | string | null;
 }

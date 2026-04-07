@@ -17,10 +17,14 @@ export default function AdminUsers() {
     setSearch,
     activeRole,
     setActiveRole,
+    users,
     filteredUsers,
+    page,
+    setPage,
+    pageSize,
+    totalCount,
     refreshUsers,
     handleDeleteUser,
-
   } = useAdminUsers();
 
   useEffect(() => {
@@ -95,10 +99,10 @@ export default function AdminUsers() {
           setSearch={setSearch}
           activeRole={activeRole}
           setActiveRole={setActiveRole}
-          filteredCount={filteredUsers.length}
+          filteredCount={totalCount}
         />
         <UserTable
-          users={filteredUsers}
+          users={users}
           departments={departments}
           onEdit={(user) => {
             startEditing(user);
@@ -106,6 +110,29 @@ export default function AdminUsers() {
           }}
           onDelete={handleDeleteUser}
         />
+        {totalCount > 0 && (
+          <div className="px-6 py-4 border-t border-slate-200/60 bg-white/50 backdrop-blur-md flex justify-between items-center rounded-b-2xl">
+            <span className="text-sm text-slate-500 font-medium">
+              Showing {(page - 1) * pageSize + 1} to {Math.min(page * pageSize, totalCount)} of {totalCount} users
+            </span>
+            <div className="flex gap-2">
+              <button
+                disabled={page === 1}
+                onClick={() => setPage(page - 1)}
+                className="px-3 py-1.5 border border-slate-200 rounded-lg text-sm font-semibold disabled:opacity-50 text-slate-700 hover:bg-slate-50 transition-colors"
+              >
+                Previous
+              </button>
+              <button
+                disabled={page * pageSize >= totalCount}
+                onClick={() => setPage(page + 1)}
+                className="px-3 py-1.5 border border-slate-200 rounded-lg text-sm font-semibold disabled:opacity-50 text-slate-700 hover:bg-slate-50 transition-colors"
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
