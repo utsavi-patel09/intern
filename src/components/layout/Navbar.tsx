@@ -49,7 +49,7 @@ export default function Navbar() {
 
     { name: "Analytics", href: "/admin/dashboard", show: role === "admin" },
     { name: "Manage Users", href: "/admin/users", show: role === "admin" },
-    { name: "Manage Interns", href: "/admin/interns", show: role === "admin" },
+    { name: "show All Interns", href: "/admin/interns", show: role === "admin" },
     { name: "Manage Departments", href: "/admin/departments", show: role === "admin" },
   ];
 
@@ -88,85 +88,7 @@ export default function Navbar() {
           )}
 
           {/* Role specific direct links */}
-         {role === "manager" && (
-          <>
-            <Link
-              href="/manager/tasks"
-              className={`text-sm font-bold transition-colors relative group py-2 ${
-                isActive("/manager/tasks")
-                  ? "text-[#1E3A5F]"
-                  : "text-slate-500 hover:text-[#1E3A5F]"
-              }`}
-            >
-              Assign Task
-              <span
-                className={`absolute bottom-0 left-0 w-full h-0.5 bg-[#0EA5E9] rounded-full transform origin-left transition-transform duration-300 ${
-                  isActive("/manager/tasks")
-                    ? "scale-x-100"
-                    : "scale-x-0 group-hover:scale-x-100"
-                }`}
-              ></span>
-            </Link>
 
-            <Link
-              href="/manager/leaves"
-              className={`text-sm font-bold transition-colors relative group py-2 ${
-                isActive("/manager/leaves")
-                  ? "text-[#1E3A5F]"
-                  : "text-slate-500 hover:text-[#1E3A5F]"
-              }`}
-            >
-              Manage Leaves
-              <span
-                className={`absolute bottom-0 left-0 w-full h-0.5 bg-[#0EA5E9] rounded-full transform origin-left transition-transform duration-300 ${
-                  isActive("/manager/leaves")
-                    ? "scale-x-100"
-                    : "scale-x-0 group-hover:scale-x-100"
-                }`}
-              ></span>
-            </Link>
-          </>
-        )}
-
-          {role === "intern" && (
-              <>
-                <Link
-                  href="/intern/tasks"
-                  className={`text-sm font-bold transition-colors relative group py-2 ${
-                    isActive("/intern/tasks")
-                      ? "text-[#1E3A5F]"
-                      : "text-slate-500 hover:text-[#1E3A5F]"
-                  }`}
-                >
-                  Tasks
-                  <span
-                    className={`absolute bottom-0 left-0 w-full h-0.5 bg-[#0EA5E9] rounded-full transform origin-left transition-transform duration-300 ${
-                      isActive("/intern/tasks")
-                        ? "scale-x-100"
-                        : "scale-x-0 group-hover:scale-x-100"
-                    }`}
-                  ></span>
-                </Link>
-
-                <Link
-                  href="/intern/leaves"
-                  className={`text-sm font-bold transition-colors relative group py-2 ${
-                    isActive("/intern/leaves")
-                      ? "text-[#1E3A5F]"
-                      : "text-slate-500 hover:text-[#1E3A5F]"
-                  }`}
-                >
-                  Leaves
-                  <span
-                    className={`absolute bottom-0 left-0 w-full h-0.5 bg-[#0EA5E9] rounded-full transform origin-left transition-transform duration-300 ${
-                      isActive("/intern/leaves")
-                        ? "scale-x-100"
-                        : "scale-x-0 group-hover:scale-x-100"
-                    }`}
-                  ></span>
-                </Link>
-              </>
-            )}
 
           {/* Dropdown */}
           {dropdownLinks.some((link) => link.show) && (

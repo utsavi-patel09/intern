@@ -55,7 +55,7 @@ export function UserFormModal({
 
           <form onSubmit={formik.handleSubmit} className="space-y-5">
             <div className="flex flex-col gap-1.5">
-              <label className="form-label">Full Name</label>
+              <label className="form-label">Full Name <span className="text-red-500">*</span></label>
               <input
                 name="name"
                 placeholder="John Doe"
@@ -70,7 +70,7 @@ export function UserFormModal({
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="form-label">Email Address</label>
+              <label className="form-label">Email Address <span className="text-red-500">*</span></label>
               <input
                 name="email"
                 type="text"
@@ -87,7 +87,7 @@ export function UserFormModal({
 
             {!editingUserId && (
               <div className="flex flex-col gap-1.5">
-                <label className="form-label">Password</label>
+                <label className="form-label">Password <span className="text-red-500">*</span></label>
                 <input
                   name="password"
                   type="password"
@@ -111,7 +111,7 @@ export function UserFormModal({
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div className="flex flex-col gap-1.5">
-                <label className="form-label">Role</label>
+                <label className="form-label">Role <span className="text-red-500">*</span></label>
                 <select
                   name="role"
                   value={formik.values.role}
@@ -141,19 +141,65 @@ export function UserFormModal({
             </div>
 
             {formik.values.role === "intern" && (
-              <div className="flex flex-col gap-1.5 animate-in slide-in-from-top-2 fade-in duration-300">
-                <label className="form-label">College / University</label>
-                <input
-                  name="college"
-                  placeholder="Enter college name"
-                  value={formik.values.college}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  className={`form-input bg-white/80 focus:bg-white ${formik.touched.college && formik.errors.college ? 'border-red-300 ring-red-100' : ''}`}
-                />
-                {formik.touched.college && formik.errors.college && (
-                  <p className="text-red-500 text-xs font-bold mt-1">{formik.errors.college}</p>
-                )}
+              <div className="space-y-5 animate-in slide-in-from-top-2 fade-in duration-300 border-t border-slate-100 pt-5 mt-5">
+                <h4 className="text-sm font-bold text-slate-500 uppercase tracking-wider">Intern Details</h4>
+                <div className="flex flex-col gap-1.5">
+                  <label className="form-label">College / University</label>
+                  <input
+                    name="college"
+                    placeholder="Enter college name"
+                    value={formik.values.college}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    className={`form-input bg-white/80 focus:bg-white ${formik.touched.college && formik.errors.college ? 'border-red-300 ring-red-100' : ''}`}
+                  />
+                  {formik.touched.college && formik.errors.college && (
+                    <p className="text-red-500 text-xs font-bold mt-1">{formik.errors.college}</p>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <div className="flex flex-col gap-1.5">
+                    <label className="form-label">Gender</label>
+                    <select
+                      name="gender"
+                      value={formik.values.gender ?? ""}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      className="form-select bg-white/80 focus:bg-white shrink-0"
+                    >
+                      <option value="">Select Gender</option>
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+
+                  <div className="flex flex-col gap-1.5">
+                    <label className="form-label">Stipend (₹)</label>
+                    <input
+                      name="stipend"
+                      type="number"
+                      placeholder="e.g. 5000"
+                      value={formik.values.stipend ?? ""}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      className={`form-input bg-white/80 focus:bg-white ${formik.touched.stipend && formik.errors.stipend ? 'border-red-300 ring-red-100' : ''}`}
+                    />
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-1.5 pt-2">
+                  <label className="form-label">End Date</label>
+                  <input
+                    name="end_date"
+                    type="date"
+                    value={formik.values.end_date ?? ""}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    className={`form-input bg-white/80 focus:bg-white ${formik.touched.end_date && formik.errors.end_date ? 'border-red-300 ring-red-100' : ''}`}
+                  />
+                </div>
               </div>
             )}
 

@@ -12,8 +12,10 @@ const GET_MANAGER = gql`
       name
       email
       role
-      department_id
+    }
+    managers(where: { user_id: { _eq: $id } }) {
       department {
+        id
         name
       }
     }
@@ -23,24 +25,18 @@ const GET_MANAGER = gql`
 // ================= INTERNS QUERY =================
 const GET_INTERNS = gql`
   query GetInternsByDepartment($departmentId: Int!) {
-    users(
-      where: {
-        department_id: { _eq: $departmentId }
-        role: { _eq: "intern" }
-      }
-    ) {
+    interns(where: { department_id: { _eq: $departmentId } }) {
       id
-      name
-      email
-
+      college
+      phone_number
+      start_date
+      user {
+        id
+        name
+        email
+      }
       department {
         name
-      }
-
-      intern {
-        college
-        phone_number
-        start_date
       }
     }
   }
@@ -52,28 +48,33 @@ interface Manager {
   name: string;
   email: string;
   role: string;
-  department_id: number;
-  department: { name: string };
+}
+
+interface DepartmentData {
+  id: number;
+  name: string;
 }
 
 interface GetManagerResponse {
   users_by_pk: Manager | null;
+  managers: { department: DepartmentData }[];
 }
 
 interface InternUser {
   id: number;
-  name: string;
-  email: string;
+  college: string;
+  phone_number: string;
+  start_date: string;
+  user: {
+    id: number;
+    name: string;
+    email: string;
+  };
   department: { name: string };
-  intern: {
-    college: string;
-    phone_number: string;
-    start_date: string;
-  } | null;
 }
 
 interface GetInternsResponse {
-  users: InternUser[];
+  interns: InternUser[];
 }
 
 
@@ -97,6 +98,7 @@ export async function GET(req: Request) {
     });
 
     const managerData = managerResult.data?.users_by_pk;
+    const managerDepartment = managerResult.data?.managers?.[0]?.department;
 
     if (!managerData) {
       return NextResponse.json(
@@ -105,23 +107,30 @@ export async function GET(req: Request) {
       );
     }
 
+    if (!managerDepartment) {
+      return NextResponse.json(
+        { error: "Manager does not have an assigned department" },
+        { status: 404 }
+      );
+    }
+
     // ===== Fetch Interns =====
     const internsResult = await client.query<GetInternsResponse>({
       query: GET_INTERNS,
-      variables: { departmentId: managerData.department_id },
+      variables: { departmentId: managerDepartment.id },
       fetchPolicy: "network-only",
     });
 
-    const internsRaw = internsResult.data?.users || [];
+    const internsRaw = internsResult.data?.interns || [];
 
     const interns = internsRaw.map((u) => ({
-      id: u.id,
-      name: u.name,
-      email: u.email,
+      id: u.user.id,
+      name: u.user.name,
+      email: u.user.email,
       department: u.department.name,
-      college: u.intern?.college ?? "",
-      phone_number: u.intern?.phone_number ?? "",
-      start_date: u.intern?.start_date ?? "",
+      college: u.college ?? "",
+      phone_number: u.phone_number ?? "",
+      start_date: u.start_date ?? "",
     }));
 
     const manager = {
@@ -129,7 +138,7 @@ export async function GET(req: Request) {
       name: managerData.name,
       email: managerData.email,
       role: managerData.role,
-      department: managerData.department.name,
+      department: managerDepartment.name,
     };
 
     return NextResponse.json({ manager, interns });

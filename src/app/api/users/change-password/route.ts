@@ -26,11 +26,16 @@ const UPDATE_PASSWORD = gql`
 
 export async function PUT(req: Request) {
   // ── Auth: any authenticated user ──
-  const { errorResponse } = await requireAuth();
+  const { session, errorResponse } = await requireAuth();
   if (errorResponse) return errorResponse;
 
+  const userId = session?.user?.id;
+  if (!userId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
-    const { user_id, current_password, new_password } = await req.json();
+    const { current_password, new_password } = await req.json();
 
     interface UserQueryResult {
       users_by_pk: {
@@ -42,7 +47,7 @@ export async function PUT(req: Request) {
     // 1️⃣ Get user
     const { data } = await client.query<UserQueryResult>({
       query: GET_USER,
-      variables: { id: user_id },
+      variables: { id: userId },
     });
 
     const user = data?.users_by_pk;
@@ -65,7 +70,7 @@ export async function PUT(req: Request) {
     await client.mutate({
       mutation: UPDATE_PASSWORD,
       variables: {
-        id: user_id,
+        id: userId,
         password: hashed,
       },
     });

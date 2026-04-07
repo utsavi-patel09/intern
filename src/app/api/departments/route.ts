@@ -14,6 +14,14 @@ const GET_DEPARTMENTS = gql`
   }
 `;
 
+const CHECK_DEPARTMENT_NAME = gql`
+  query CheckDepartmentName($name: String!) {
+    departments(where: { name: { _eq: $name } }) {
+      id
+    }
+  }
+`;
+
 const INSERT_DEPARTMENT = gql`
   mutation InsertDepartment($object: departments_insert_input!) {
     insert_departments_one(object: $object) {
@@ -81,6 +89,18 @@ export async function POST(req: Request) {
 
   try {
     const body: Omit<Department, "id"> = await req.json();
+
+    // Check for duplicate name
+    const { data: checkData } = await client.query<{ departments: any[] }>({
+      query: CHECK_DEPARTMENT_NAME,
+      variables: { name: body.name },
+      fetchPolicy: "network-only",
+    });
+
+    if ((checkData?.departments?.length ?? 0) > 0) {
+      return NextResponse.json({ error: "Department already exists" }, { status: 400 });
+    }
+
     const { data } = await client.mutate<{ insert_departments_one: Department }>({
       mutation: INSERT_DEPARTMENT,
       variables: { object: body },
@@ -101,6 +121,21 @@ export async function PUT(req: Request) {
   try {
     const body: { id: number; name?: string } = await req.json();
     const { id, ...changes } = body;
+
+    // Check for duplicate name if name is being changed
+    if (changes.name) {
+      const { data: checkData } = await client.query<{ departments: any[] }>({
+        query: CHECK_DEPARTMENT_NAME,
+        variables: { name: changes.name },
+        fetchPolicy: "network-only",
+      });
+
+      const existingDept = checkData?.departments?.find((d: any) => d.id !== id);
+      if (existingDept) {
+        return NextResponse.json({ error: "Department already exists" }, { status: 400 });
+      }
+    }
+
     const { data } = await client.mutate<{ update_departments_by_pk: Department }>({
       mutation: UPDATE_DEPARTMENT,
       variables: { id, changes },

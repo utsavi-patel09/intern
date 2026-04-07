@@ -7,7 +7,7 @@ export default function Features() {
           <p className="text-xl text-slate-500 font-medium max-w-3xl mx-auto">Everything you need to orchestrate internship programs without the operational headaches.</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Feature 1 */}
           <div className="group p-10 rounded-[2.5rem] bg-white border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgb(30,58,95,0.10)] hover:-translate-y-2 transition-all duration-500">
             <div className="w-16 h-16 rounded-[1.25rem] flex items-center justify-center mb-8 shadow-sm border border-sky-100 text-[#1E3A5F] bg-sky-50 group-hover:scale-110 group-hover:bg-[#1E3A5F] group-hover:text-white transition-all duration-500">
@@ -24,15 +24,6 @@ export default function Features() {
             </div>
             <h3 className="text-2xl font-bold text-slate-900 mb-4 font-heading">Department Analytics</h3>
             <p className="text-slate-500 font-medium text-lg leading-relaxed">Organize teams effortlessly with native department assignments, filtering, and real-time manager tracking.</p>
-          </div>
-
-          {/* Feature 3 */}
-          <div className="group p-10 rounded-[2.5rem] bg-white border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgb(5,150,105,0.10)] hover:-translate-y-2 transition-all duration-500">
-            <div className="w-16 h-16 rounded-[1.25rem] flex items-center justify-center mb-8 shadow-sm border border-emerald-100 text-emerald-600 bg-emerald-50 group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all duration-500">
-              <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
-            </div>
-            <h3 className="text-2xl font-bold text-slate-900 mb-4 font-heading">Seamless Tasks</h3>
-            <p className="text-slate-500 font-medium text-lg leading-relaxed">Assign tasks, track progress visually, and manage interconnected workflows with unparalleled ease.</p>
           </div>
         </div>
       </div>

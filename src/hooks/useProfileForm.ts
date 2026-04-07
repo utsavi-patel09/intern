@@ -13,15 +13,13 @@ export function useProfileForm({ intern, onSuccess }: UseProfileFormProps) {
 
   const formik = useFormik({
     initialValues: {
-      college: "",
       phone_number: "",
-      start_date: "",
+      gender: "",
     },
     enableReinitialize: true,
     validationSchema: Yup.object({
-      college: Yup.string().required("Required"),
       phone_number: Yup.string().min(10, "Invalid phone number").required("Required"),
-      start_date: Yup.string().required("Required"),
+      gender: Yup.string().required("Required"),
     }),
     onSubmit: async (values) => {
       if (!intern) return;
@@ -31,10 +29,9 @@ export function useProfileForm({ intern, onSuccess }: UseProfileFormProps) {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            user_id: intern.id,
-            college: values.college,
+            user_id: intern.id, // This is the user ID in our combined mapping
             phone_number: values.phone_number,
-            start_date: values.start_date,
+            gender: values.gender,
           }),
         });
         const data = await res.json();
@@ -54,9 +51,8 @@ export function useProfileForm({ intern, onSuccess }: UseProfileFormProps) {
   useEffect(() => {
     if (intern) {
       formik.setValues({
-        college: intern.college || "",
         phone_number: intern.phone_number || "",
-        start_date: intern.start_date?.split('T')[0] || "",
+        gender: intern.gender || "",
       });
     }
   }, [intern]);
